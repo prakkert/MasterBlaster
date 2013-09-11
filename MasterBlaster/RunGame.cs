@@ -21,12 +21,13 @@ namespace MasterBlaster
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        public Dictionary<string, Texture2D> Textures { get; private set; }
+
         Ship ship;
+        Fireball fireball;
         List<Asteroid> asteroids;
 
         SpriteFont defaultFont;
-
-        Texture2D star;
 
         KeyboardState lastKeyboardState;
 
@@ -63,10 +64,30 @@ namespace MasterBlaster
 
             graphics.ApplyChanges();
 
-       
-
             lastKeyboardState = Keyboard.GetState();
             base.Initialize();
+
+            ship = new Ship(Textures["Ship"], new Vector2((int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2), (int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2)));
+
+            asteroids = new List<Asteroid>();
+
+            for (int i = 0; i < 5; i++)
+            {
+                asteroids.Add(new Asteroid(Textures["Asteroid"]));
+            }
+
+            defaultFont = Content.Load<SpriteFont>("DefaultFont");
+
+            fireball = null;
+
+            starPoints = new List<Vector2>();
+
+            points = 0;
+
+            for (int i = 0; i < 1000; i++)
+            {
+                starPoints.Add(new Vector2(RandomGenerator.Get.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width - 1), RandomGenerator.Get.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 1)));
+            }
         }
 
         /// <summary>
@@ -78,27 +99,16 @@ namespace MasterBlaster
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            ship = new Ship(Content.Load<Texture2D>("Ship"), new Vector2((int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2), (int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2)));
+            Textures = new Dictionary<string, Texture2D>();
 
-            asteroids = new List<Asteroid>();
+            Textures.Add("Ship", Content.Load<Texture2D>("Ship"));
+            Textures.Add("Asteroid", Content.Load<Texture2D>("Asteroid"));
+            Textures.Add("Fireball", Content.Load<Texture2D>("Fireball"));
 
-            for (int i = 0; i < 5; i++)
-            {
-                asteroids.Add(new Asteroid(Content.Load<Texture2D>("Asteroid")));
-            }
-
-            defaultFont = Content.Load<SpriteFont>("DefaultFont");
-
-            star = new Texture2D(this.GraphicsDevice, 1, 1);
+            Texture2D star = new Texture2D(this.GraphicsDevice, 1, 1);
             star.SetData(new Color[] { Color.White });
 
-            starPoints = new List<Vector2>();
-
-           
-            for (int i = 0; i < 1000; i++)
-            {
-                starPoints.Add(new Vector2(RandomGenerator.Get.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width - 1), RandomGenerator.Get.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 1)));
-            }
+            Textures.Add("Star", star);
         }
 
         /// <summary>
@@ -122,6 +132,8 @@ namespace MasterBlaster
             {
                 pause = !pause;
             }
+
+           
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -149,7 +161,23 @@ namespace MasterBlaster
                     ship.Decelerate();
                 }
 
+                if (keyboardState.IsKeyDown(Keys.LeftControl) && fireball == null)
+                {
+                    fireball = new Fireball(Textures["Fireball"], ship.Position, ship.Direction, ship.Rotation);
+                }
+
                 ship.Update(gameTime);
+                
+                if (fireball != null)
+                {
+                    fireball.Update(gameTime);
+
+                    if (fireball.Destroyed)
+                    {
+                        fireball = null;
+                    }
+                }
+
 
                 asteroids = asteroids.Where(ast => ast.Destroyed == false).ToList();
 
@@ -157,17 +185,26 @@ namespace MasterBlaster
                 {
                     asteroid.Update(gameTime);
 
-                    if (asteroid.Boundaries.Intersects(ship.Boundaries))
+                    if (fireball != null && asteroid.Boundaries.Intersects(fireball.Boundaries))
                     {
                         asteroid.Destroy();
+                        fireball.Destroy();
                         points++;
+                    }
+                    if (asteroid.Boundaries.Intersects(ship.Boundaries))
+                    {
+                        ResetElapsedTime();
+                        Initialize();
+
+                        return;
                     }
                 }
 
+             
 
                 while (asteroids.Count < 3)
                 {
-                    asteroids.Add(new Asteroid(Content.Load<Texture2D>("Asteroid")));
+                    asteroids.Add(new Asteroid(Textures["Asteroid"]));
                 }
             }
 
@@ -190,7 +227,7 @@ namespace MasterBlaster
 
             foreach (Vector2 starPoint in starPoints)
             {
-                spriteBatch.Draw(star, starPoint, Color.White);
+                spriteBatch.Draw(Textures["Star"], starPoint, Color.White);
             }
 
             spriteBatch.DrawString(defaultFont, "Points: " + points, new Vector2(10, 10), Color.Red);
@@ -202,6 +239,11 @@ namespace MasterBlaster
             foreach (Asteroid asteroid in asteroids)
             {
                 spriteBatch.Draw(asteroid.Texture, asteroid.Position, null, Color.White, asteroid.Rotation, new Vector2(25, 25), asteroid.Size, SpriteEffects.None, 0f);
+            }
+
+            if (fireball != null)
+            {
+                spriteBatch.Draw(fireball.Texture, fireball.Position, null, Color.White, fireball.Rotation, new Vector2(25, 12), 1.0f, SpriteEffects.None, 0f);
             }
       
             spriteBatch.End();

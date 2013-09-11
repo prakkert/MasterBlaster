@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Asteroid.cs" />
+    <Compile Include="Fireball.cs" />
     <Compile Include="RandomGenerator.cs" />
     <Compile Include="RunGame.cs" />
     <Compile Include="Program.cs" />
@@ -65,8 +66,12 @@
     <Content Include="Content\DefaultFont.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Fireball.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Content\Originals\Ship.png" />
     <Content Include="Content\Originals\Asteroid.png" />
+    <Content Include="Content\Originals\Fireball.png" />
     <Content Include="Icon.ico" />
     <Content Include="SDL.dll" />
   </ItemGroup>
