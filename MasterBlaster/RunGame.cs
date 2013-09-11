@@ -1,5 +1,6 @@
 ﻿#region Using Statements
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -7,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
+using System.Threading;
 #endregion
 
 namespace MasterBlaster
@@ -14,13 +16,13 @@ namespace MasterBlaster
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Game
+    public class RunGame : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
         Ship ship;
-        Asteroid asteroid;
+        List<Asteroid> asteroids;
 
         SpriteFont defaultFont;
 
@@ -34,7 +36,7 @@ namespace MasterBlaster
 
         private List<Vector2> starPoints;
 
-        public Game1()
+        public RunGame()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -77,8 +79,13 @@ namespace MasterBlaster
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             ship = new Ship(Content.Load<Texture2D>("Ship"), new Vector2((int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2), (int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2)));
-            asteroid = new Asteroid(Content.Load<Texture2D>("Asteroid"));
 
+            asteroids = new List<Asteroid>();
+
+            for (int i = 0; i < 5; i++)
+            {
+                asteroids.Add(new Asteroid(Content.Load<Texture2D>("Asteroid")));
+            }
 
             defaultFont = Content.Load<SpriteFont>("DefaultFont");
 
@@ -87,10 +94,10 @@ namespace MasterBlaster
 
             starPoints = new List<Vector2>();
 
-            Random r = new Random();
+           
             for (int i = 0; i < 1000; i++)
             {
-                starPoints.Add(new Vector2(r.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width - 1), r.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 1)));
+                starPoints.Add(new Vector2(RandomGenerator.Get.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width - 1), RandomGenerator.Get.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 1)));
             }
         }
 
@@ -142,13 +149,25 @@ namespace MasterBlaster
                     ship.Decelerate();
                 }
 
-                asteroid.Update(gameTime);
                 ship.Update(gameTime);
 
-                if (asteroid.Boundaries.Intersects(ship.Boundaries))
+                asteroids = asteroids.Where(ast => ast.Destroyed == false).ToList();
+
+                foreach (Asteroid asteroid in asteroids)
                 {
-                    asteroid = new Asteroid(asteroid.Texture);
-                    points++;
+                    asteroid.Update(gameTime);
+
+                    if (asteroid.Boundaries.Intersects(ship.Boundaries))
+                    {
+                        asteroid.Destroy();
+                        points++;
+                    }
+                }
+
+
+                while (asteroids.Count < 3)
+                {
+                    asteroids.Add(new Asteroid(Content.Load<Texture2D>("Asteroid")));
                 }
             }
 
@@ -179,8 +198,11 @@ namespace MasterBlaster
             spriteBatch.DrawString(defaultFont, "FPS: " + fps, new Vector2(10, 50), Color.Red);
 
             spriteBatch.Draw(ship.Texture, ship.Position, null, Color.White, ship.Rotation, new Vector2(50,50), 1.0f, SpriteEffects.None, 0f);
-            spriteBatch.Draw(asteroid.Texture, asteroid.Position, null, Color.White, asteroid.Rotation, new Vector2(25, 25), 1.0f, SpriteEffects.None, 0f);
 
+            foreach (Asteroid asteroid in asteroids)
+            {
+                spriteBatch.Draw(asteroid.Texture, asteroid.Position, null, Color.White, asteroid.Rotation, new Vector2(25, 25), asteroid.Size, SpriteEffects.None, 0f);
+            }
       
             spriteBatch.End();
 
