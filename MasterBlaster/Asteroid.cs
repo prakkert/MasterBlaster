@@ -8,59 +8,40 @@ using System.Text;
 
 namespace MasterBlaster
 {
-    public class Ship
+    public class Asteroid
     {
         public Texture2D Texture { get; set; }
         public Vector2 Position { get; set; }
         public Vector2 Direction { get; set; }
         public float Speed { get; set; }
-        public float MaxSpeed { get; set; }
         public float Rotation { get; set; }
+        public float RotationSpeed { get; set; }
 
         public Rectangle Boundaries { get; set; }
 
-        public Ship(Texture2D texture, Vector2 position)
+        public Asteroid(Texture2D texture)
         {
+            Random r = new Random();
+
             Texture = texture;
-            Position = position;
-            Speed = 0;
-            Direction = new Vector2(0, 0);
-            Rotation = (MathHelper.Pi / 2);
-            MaxSpeed = 10;
+            Rotation = 0;
+            Direction = new Vector2((float)Math.Cos(r.Next(100,100)/0.01f), (float)Math.Sin(r.Next(-100,100)/0.01f));
+
+            Position = new Vector2(r.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width), r.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height));
+            
+            Speed = r.Next(10, 1000)*0.01f;
+            RotationSpeed = r.Next(-100, 100) * 0.002f;
 
             Boundaries = new Rectangle((int)(Position.X - Texture.Width / 2), (int)(Position.Y - Texture.Height / 2), Texture.Width, Texture.Height);
         }
 
-        public void Accelerate()
-        {
-            if (Speed < MaxSpeed)
-            {
-                Speed += 0.1f;
-            }
-        }
-        public void Decelerate()
-        {
-            if (Speed > 0)
-            {
-                Speed -= 0.1f;
-            }
-        }
-
-        public void Left()
-        {
-            Rotation -= 0.1f;
-        }
-
-        public void Right()
-        {
-            Rotation += 0.1f;
-        }
-
         public void Update(GameTime gameTime)
         {
-            Direction = new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation));
 
             Position += Direction * (int)(Speed * (gameTime.ElapsedGameTime.TotalMilliseconds/10));
+
+            Rotation += RotationSpeed;
+
 
             if (Position.X > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width)
             {
@@ -78,7 +59,9 @@ namespace MasterBlaster
             {
                 Position = new Vector2(Position.X, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
             }
+
             Boundaries = new Rectangle((int)Position.X, (int)Position.Y, Boundaries.Width, Boundaries.Height);
+            
         }
     }
 }
