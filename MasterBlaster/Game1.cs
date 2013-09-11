@@ -19,6 +19,8 @@ namespace MasterBlaster
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Ship ship;
+
         public Game1()
             : base()
         {
@@ -35,6 +37,10 @@ namespace MasterBlaster
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+           
+            graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            graphics.IsFullScreen = true;
 
             base.Initialize();
         }
@@ -48,7 +54,8 @@ namespace MasterBlaster
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            ship = new Ship(Content.Load<Texture2D>("Ship"), new Vector2((int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width/2), (int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height/2)));
+            
         }
 
         /// <summary>
@@ -70,7 +77,29 @@ namespace MasterBlaster
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            var keyboardState = Keyboard.GetState();
+
+            if (keyboardState.IsKeyUp(Keys.Left) && keyboardState.IsKeyDown(Keys.Right))
+            {
+                ship.Right();
+            }
+
+            else if (keyboardState.IsKeyDown(Keys.Left) && keyboardState.IsKeyUp(Keys.Right))
+            {
+                ship.Left();
+            }
+
+            if (keyboardState.IsKeyDown(Keys.Up) && keyboardState.IsKeyUp(Keys.Down))
+            {
+                ship.Accelerate();
+            }
+
+            else if (keyboardState.IsKeyUp(Keys.Up) && keyboardState.IsKeyDown(Keys.Down))
+            {
+                ship.Decelerate();
+            }
+
+            ship.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -81,9 +110,13 @@ namespace MasterBlaster
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
-            // TODO: Add your drawing code here
+            spriteBatch.Begin();
+
+            spriteBatch.Draw(ship.Texture, ship.Position, null, Color.White, ship.Rotation, new Vector2(50,50), 1.0f, SpriteEffects.None, 0f);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
