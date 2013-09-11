@@ -61,6 +61,9 @@
     <Content Include="Content\Asteroid.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\DefaultFont.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Content\Originals\Ship.png" />
     <Content Include="Content\Originals\Asteroid.png" />
     <Content Include="Icon.ico" />

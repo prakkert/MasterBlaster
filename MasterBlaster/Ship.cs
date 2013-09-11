@@ -37,12 +37,20 @@ namespace MasterBlaster
             {
                 Speed += 0.1f;
             }
+            if (Speed > MaxSpeed)
+            {
+                Speed = MaxSpeed;
+            }
         }
         public void Decelerate()
         {
             if (Speed > 0)
             {
                 Speed -= 0.1f;
+            }
+            if (Speed < 0)
+            {
+                Speed = 0;
             }
         }
 
@@ -78,7 +86,7 @@ namespace MasterBlaster
             {
                 Position = new Vector2(Position.X, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
             }
-            Boundaries = new Rectangle((int)Position.X, (int)Position.Y, Boundaries.Width, Boundaries.Height);
+            Boundaries = new Rectangle((int)(Position.X - Texture.Width / 2), (int)(Position.Y - Texture.Height / 2), Texture.Width, Texture.Height);
         }
     }
 }

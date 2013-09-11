@@ -60,7 +60,7 @@ namespace MasterBlaster
                 Position = new Vector2(Position.X, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
             }
 
-            Boundaries = new Rectangle((int)Position.X, (int)Position.Y, Boundaries.Width, Boundaries.Height);
+            Boundaries = new Rectangle((int)(Position.X - Texture.Width / 2), (int)(Position.Y - Texture.Height / 2), Texture.Width, Texture.Height);
             
         }
     }

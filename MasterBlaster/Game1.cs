@@ -22,6 +22,18 @@ namespace MasterBlaster
         Ship ship;
         Asteroid asteroid;
 
+        SpriteFont defaultFont;
+
+        Texture2D star;
+
+        KeyboardState lastKeyboardState;
+
+        bool pause = false;
+        int fps = 0;
+        int points = 0;
+
+        private List<Vector2> starPoints;
+
         public Game1()
             : base()
         {
@@ -43,6 +55,15 @@ namespace MasterBlaster
             graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             graphics.IsFullScreen = true;
             IsMouseVisible = false;
+
+            graphics.SynchronizeWithVerticalRetrace = false;
+            IsFixedTimeStep = false;
+
+            graphics.ApplyChanges();
+
+       
+
+            lastKeyboardState = Keyboard.GetState();
             base.Initialize();
         }
 
@@ -55,8 +76,22 @@ namespace MasterBlaster
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            ship = new Ship(Content.Load<Texture2D>("Ship"), new Vector2((int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width/2), (int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height/2)));
+            ship = new Ship(Content.Load<Texture2D>("Ship"), new Vector2((int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2), (int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2)));
             asteroid = new Asteroid(Content.Load<Texture2D>("Asteroid"));
+
+
+            defaultFont = Content.Load<SpriteFont>("DefaultFont");
+
+            star = new Texture2D(this.GraphicsDevice, 1, 1);
+            star.SetData(new Color[] { Color.White });
+
+            starPoints = new List<Vector2>();
+
+            Random r = new Random();
+            for (int i = 0; i < 1000; i++)
+            {
+                starPoints.Add(new Vector2(r.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width - 1), r.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 1)));
+            }
         }
 
         /// <summary>
@@ -75,38 +110,52 @@ namespace MasterBlaster
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            KeyboardState keyboardState = Keyboard.GetState();
+            if (keyboardState.IsKeyDown(Keys.F12) && (lastKeyboardState.IsKeyUp(Keys.F12)))
+            {
+                pause = !pause;
+            }
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            var keyboardState = Keyboard.GetState();
-
-            if (keyboardState.IsKeyUp(Keys.Left) && keyboardState.IsKeyDown(Keys.Right))
+            if (!pause)
             {
-                ship.Right();
+
+                if (keyboardState.IsKeyUp(Keys.Left) && keyboardState.IsKeyDown(Keys.Right))
+                {
+                    ship.Right();
+                }
+
+                else if (keyboardState.IsKeyDown(Keys.Left) && keyboardState.IsKeyUp(Keys.Right))
+                {
+                    ship.Left();
+                }
+
+                if (keyboardState.IsKeyDown(Keys.Up) && keyboardState.IsKeyUp(Keys.Down))
+                {
+                    ship.Accelerate();
+                }
+
+                else if (keyboardState.IsKeyUp(Keys.Up) && keyboardState.IsKeyDown(Keys.Down))
+                {
+                    ship.Decelerate();
+                }
+
+                asteroid.Update(gameTime);
+                ship.Update(gameTime);
+
+                if (asteroid.Boundaries.Intersects(ship.Boundaries))
+                {
+                    asteroid = new Asteroid(asteroid.Texture);
+                    points++;
+                }
             }
 
-            else if (keyboardState.IsKeyDown(Keys.Left) && keyboardState.IsKeyUp(Keys.Right))
-            {
-                ship.Left();
-            }
+            fps = (int)(1000 / gameTime.ElapsedGameTime.TotalMilliseconds);
 
-            if (keyboardState.IsKeyDown(Keys.Up) && keyboardState.IsKeyUp(Keys.Down))
-            {
-                ship.Accelerate();
-            }
+            lastKeyboardState = keyboardState;
 
-            else if (keyboardState.IsKeyUp(Keys.Up) && keyboardState.IsKeyDown(Keys.Down))
-            {
-                ship.Decelerate();
-            }
-
-            asteroid.Update(gameTime);
-            ship.Update(gameTime);
-
-            if (asteroid.Boundaries.Intersects(ship.Boundaries))
-            {
-                asteroid = new Asteroid(asteroid.Texture);
-            }
             base.Update(gameTime);
         }
 
@@ -120,9 +169,19 @@ namespace MasterBlaster
 
             spriteBatch.Begin();
 
+            foreach (Vector2 starPoint in starPoints)
+            {
+                spriteBatch.Draw(star, starPoint, Color.White);
+            }
+
+            spriteBatch.DrawString(defaultFont, "Points: " + points, new Vector2(10, 10), Color.Red);
+            spriteBatch.DrawString(defaultFont, "Speed: " + Math.Round(ship.Speed,1), new Vector2(10, 30), Color.Red);
+            spriteBatch.DrawString(defaultFont, "FPS: " + fps, new Vector2(10, 50), Color.Red);
+
             spriteBatch.Draw(ship.Texture, ship.Position, null, Color.White, ship.Rotation, new Vector2(50,50), 1.0f, SpriteEffects.None, 0f);
             spriteBatch.Draw(asteroid.Texture, asteroid.Position, null, Color.White, asteroid.Rotation, new Vector2(25, 25), 1.0f, SpriteEffects.None, 0f);
 
+      
             spriteBatch.End();
 
             base.Draw(gameTime);
