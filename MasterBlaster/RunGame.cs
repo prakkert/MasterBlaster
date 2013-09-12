@@ -31,6 +31,8 @@ namespace MasterBlaster
 
         KeyboardState lastKeyboardState;
 
+        TimeSpan levelTime;
+
         bool pause = false;
         int fps = 0;
         int points = 0;
@@ -88,6 +90,8 @@ namespace MasterBlaster
             {
                 starPoints.Add(new Vector2(RandomGenerator.Get.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width - 1), RandomGenerator.Get.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 1)));
             }
+
+            levelTime = new TimeSpan();
         }
 
         /// <summary>
@@ -138,7 +142,7 @@ namespace MasterBlaster
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (!pause)
+            if (!pause && levelTime.TotalSeconds > 3)
             {
 
                 if (keyboardState.IsKeyUp(Keys.Left) && keyboardState.IsKeyDown(Keys.Right))
@@ -202,7 +206,7 @@ namespace MasterBlaster
 
              
 
-                while (asteroids.Count < 3)
+                while (asteroids.Count < 5)
                 {
                     asteroids.Add(new Asteroid(Textures["Asteroid"]));
                 }
@@ -211,6 +215,8 @@ namespace MasterBlaster
             fps = (int)(1000 / gameTime.ElapsedGameTime.TotalMilliseconds);
 
             lastKeyboardState = keyboardState;
+
+            levelTime += gameTime.ElapsedGameTime;
 
             base.Update(gameTime);
         }
