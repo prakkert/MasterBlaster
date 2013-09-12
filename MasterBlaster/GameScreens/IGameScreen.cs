@@ -10,9 +10,8 @@ namespace MasterBlaster.GameScreens
     public interface IGameScreen
     {
         string Name { get; }
-        RunGame Game { get; }
 
-        void Initialize(RunGame game);
+        void Initialize();
         void Activate();
         void Deactivate();
         void Update(GameTime gameTime);

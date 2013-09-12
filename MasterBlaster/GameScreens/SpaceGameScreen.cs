@@ -8,21 +8,13 @@ using System.Text;
 
 namespace MasterBlaster.GameScreens
 {
-    public class SpaceGameScreen : IGameScreen
+    public class SpaceGameScreen : BaseGameScreen
     {
-        public RunGame Game { get; set; }
-        public string Name
-        {
-            get { return "Space"; }
-        }
-
         Ship ship;
         Fireball fireball;
         List<Asteroid> asteroids;
 
         SpriteFont defaultFont;
-
-        KeyboardState lastKeyboardState;
 
         TimeSpan levelTime;
 
@@ -32,16 +24,14 @@ namespace MasterBlaster.GameScreens
 
         private List<Vector2> starPoints;
 
-        public void Initialize(RunGame game)
+        public SpaceGameScreen(string name, RunGame game)
+            : base(name, game)
         {
-            Game = game;
-            Initialize();
         }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Game.IsMouseVisible = false;
-            lastKeyboardState = Keyboard.GetState();
 
             ship = new Ship(Game.Textures["Ship"], new Vector2((int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2), (int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2)));
 
@@ -68,27 +58,22 @@ namespace MasterBlaster.GameScreens
             levelTime = new TimeSpan();
         }
 
-        public void Activate()
+        public override void Activate()
         {
 
         }
 
-        public void Deactivate()
+        public override void Deactivate()
         {
 
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
-
-
-            KeyboardState keyboardState = Keyboard.GetState();
-            if (keyboardState.IsKeyDown(Keys.F12) && (lastKeyboardState.IsKeyUp(Keys.F12)))
+            if (Game.CurrentKeyboardState.IsKeyDown(Keys.F12) && (Game.LastKeyboardState.IsKeyUp(Keys.F12)))
             {
                 pause = !pause;
             }
-
-
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Game.Exit();
@@ -96,27 +81,27 @@ namespace MasterBlaster.GameScreens
             if (!pause && levelTime.TotalSeconds > 3)
             {
 
-                if (keyboardState.IsKeyUp(Keys.Left) && keyboardState.IsKeyDown(Keys.Right))
+                if (Game.CurrentKeyboardState.IsKeyUp(Keys.Left) && Game.CurrentKeyboardState.IsKeyDown(Keys.Right))
                 {
                     ship.Right();
                 }
 
-                else if (keyboardState.IsKeyDown(Keys.Left) && keyboardState.IsKeyUp(Keys.Right))
+                else if (Game.CurrentKeyboardState.IsKeyDown(Keys.Left) && Game.CurrentKeyboardState.IsKeyUp(Keys.Right))
                 {
                     ship.Left();
                 }
 
-                if (keyboardState.IsKeyDown(Keys.Up) && keyboardState.IsKeyUp(Keys.Down))
+                if (Game.CurrentKeyboardState.IsKeyDown(Keys.Up) && Game.CurrentKeyboardState.IsKeyUp(Keys.Down))
                 {
                     ship.Accelerate();
                 }
 
-                else if (keyboardState.IsKeyUp(Keys.Up) && keyboardState.IsKeyDown(Keys.Down))
+                else if (Game.CurrentKeyboardState.IsKeyUp(Keys.Up) && Game.CurrentKeyboardState.IsKeyDown(Keys.Down))
                 {
                     ship.Decelerate();
                 }
 
-                if (keyboardState.IsKeyDown(Keys.LeftControl) && fireball == null)
+                if (Game.CurrentKeyboardState.IsKeyDown(Keys.LeftControl) && fireball == null)
                 {
                     fireball = new Fireball(Game.Textures["Fireball"], ship.Position, ship.Direction, ship.Rotation);
                 }
@@ -155,8 +140,6 @@ namespace MasterBlaster.GameScreens
                     }
                 }
 
-
-
                 while (asteroids.Count < 5)
                 {
                     asteroids.Add(new Asteroid(Game.Textures["Asteroid"]));
@@ -165,12 +148,10 @@ namespace MasterBlaster.GameScreens
 
             fps = (int)(1000 / gameTime.ElapsedGameTime.TotalMilliseconds);
 
-            lastKeyboardState = keyboardState;
-
             levelTime += gameTime.ElapsedGameTime;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             foreach (Vector2 starPoint in starPoints)
             {
@@ -180,7 +161,7 @@ namespace MasterBlaster.GameScreens
             spriteBatch.DrawString(defaultFont, "Points: " + points, new Vector2(10, 10), Color.Red);
             spriteBatch.DrawString(defaultFont, "Speed: " + Math.Round(ship.Speed, 1), new Vector2(10, 30), Color.Red);
             spriteBatch.DrawString(defaultFont, "FPS: " + fps, new Vector2(10, 50), Color.Red);
-            spriteBatch.DrawString(defaultFont, "Memory: " + (int)(GC.GetTotalMemory(false) / 1024 / 1024) + "mB", new Vector2(10, 70), Color.Red);
+            spriteBatch.DrawString(defaultFont, "Memory: " + Math.Round((double)GC.GetTotalMemory(true) / 1024 / 1024,1) + " mB", new Vector2(10, 70), Color.Red);
 
             spriteBatch.Draw(ship.Texture, ship.Position, null, Color.White, ship.Rotation, new Vector2(50, 50), 1.0f, SpriteEffects.None, 0f);
 

@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
 using System.Threading;
 using MasterBlaster.GameScreens;
+
 #endregion
 
 namespace MasterBlaster
@@ -19,18 +20,23 @@ namespace MasterBlaster
     /// </summary>
     public class RunGame : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        public GraphicsDeviceManager Graphics { get; private set; }
+        public SpriteBatch SpriteBatch { get; private set; }
 
         public Dictionary<string, Texture2D> Textures { get; private set; }
 
+        public KeyboardState LastKeyboardState { get; private set; }
+        public KeyboardState CurrentKeyboardState { get; private set; }
+
+        public MouseState LastMouseState { get; private set; }
+        public MouseState CurrentMouseState { get; private set; }
+
         private GameScreenManager _gameScreenManager;
-        
+
         public RunGame()
             : base()
         {
-            graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+            Graphics = new GraphicsDeviceManager(this);
         }
 
         /// <summary>
@@ -41,18 +47,21 @@ namespace MasterBlaster
         /// </summary>
         protected override void Initialize()
         {
-            graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            graphics.IsFullScreen = true;
 
-            graphics.SynchronizeWithVerticalRetrace = false;
+            Graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            Graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            Graphics.SynchronizeWithVerticalRetrace = true;
+            Graphics.IsFullScreen = true;
+            Graphics.ApplyChanges();
+
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
+
             IsFixedTimeStep = false;
 
-            graphics.ApplyChanges();
-
             _gameScreenManager = new GameScreenManager();
+            _gameScreenManager.Push(new SpaceGameScreen("Space", this));
 
-            _gameScreenManager.Push(new SpaceGameScreen());
+            Textures = new Dictionary<string, Texture2D>();
 
             base.Initialize();
         }
@@ -63,10 +72,7 @@ namespace MasterBlaster
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            Textures = new Dictionary<string, Texture2D>();
+            Content.RootDirectory = "Content";
 
             Textures.Add("Ship", Content.Load<Texture2D>("Ship"));
             Textures.Add("Asteroid", Content.Load<Texture2D>("Asteroid"));
@@ -77,7 +83,7 @@ namespace MasterBlaster
 
             Textures.Add("Star", star);
 
-            _gameScreenManager.ActiveGameScreen.Initialize(this);
+            _gameScreenManager.ActiveGameScreen.Initialize();
         }
 
         /// <summary>
@@ -86,7 +92,7 @@ namespace MasterBlaster
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            
         }
 
         /// <summary>
@@ -96,7 +102,13 @@ namespace MasterBlaster
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            CurrentKeyboardState = Keyboard.GetState();
+            CurrentMouseState = Mouse.GetState();
+
             _gameScreenManager.ActiveGameScreen.Update(gameTime);
+
+            LastMouseState = CurrentMouseState;
+            LastKeyboardState = CurrentKeyboardState;
 
             base.Update(gameTime);
         }
@@ -109,11 +121,11 @@ namespace MasterBlaster
         {
             GraphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin();
+            SpriteBatch.Begin();
 
-            _gameScreenManager.ActiveGameScreen.Draw(spriteBatch);
+            _gameScreenManager.ActiveGameScreen.Draw(SpriteBatch);
       
-            spriteBatch.End();
+            SpriteBatch.End();
 
             base.Draw(gameTime);
         }

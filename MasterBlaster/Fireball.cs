@@ -13,7 +13,6 @@ namespace MasterBlaster
         public Vector2 Position { get; set; }
         public Vector2 Direction { get; set; }
         public float Speed { get; set; }
-        public float Distance { get; set; }
         public float MaxDistance { get; set; }
         public float Rotation { get; set; }
 
@@ -28,7 +27,6 @@ namespace MasterBlaster
             Speed = 25;
             Direction = direction;
             Rotation = rotation;
-            Distance = 0;
             MaxDistance = 750;
 
             Boundaries = new Rectangle((int)(Position.X - Texture.Width / 2), (int)(Position.Y - Texture.Height / 2), Texture.Width, Texture.Height);
@@ -43,13 +41,13 @@ namespace MasterBlaster
         {
             if (!Destroyed)
             {
-                if (Distance >= MaxDistance)
+                if (MaxDistance < 0)
                 {
                     Destroy();
                     return;
                 }
 
-                Distance += Direction.Length() * (int)(Speed * (gameTime.ElapsedGameTime.TotalMilliseconds / 10));
+                MaxDistance -= Direction.Length() * (int)(Speed * (gameTime.ElapsedGameTime.TotalMilliseconds / 10));
 
                 Position += Direction * (int)(Speed * (gameTime.ElapsedGameTime.TotalMilliseconds / 10));
 
