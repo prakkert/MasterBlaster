@@ -233,6 +233,7 @@ namespace MasterBlaster
             spriteBatch.DrawString(defaultFont, "Points: " + points, new Vector2(10, 10), Color.Red);
             spriteBatch.DrawString(defaultFont, "Speed: " + Math.Round(ship.Speed,1), new Vector2(10, 30), Color.Red);
             spriteBatch.DrawString(defaultFont, "FPS: " + fps, new Vector2(10, 50), Color.Red);
+            spriteBatch.DrawString(defaultFont, "Memory: " + (int)(GC.GetTotalMemory(false)/1024/1024) + "mB", new Vector2(10, 70), Color.Red);
 
             spriteBatch.Draw(ship.Texture, ship.Position, null, Color.White, ship.Rotation, new Vector2(50,50), 1.0f, SpriteEffects.None, 0f);
 
