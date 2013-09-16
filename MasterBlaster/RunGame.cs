@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
 using System.Threading;
 using MasterBlaster.GameScreens;
+using MasterBlaster.Services;
 
 #endregion
 
@@ -30,8 +31,6 @@ namespace MasterBlaster
 
         public MouseState LastMouseState { get; private set; }
         public MouseState CurrentMouseState { get; private set; }
-
-        private GameScreenManager _gameScreenManager;
 
         public RunGame()
             : base()
@@ -58,8 +57,7 @@ namespace MasterBlaster
 
             IsFixedTimeStep = false;
 
-            _gameScreenManager = new GameScreenManager();
-            _gameScreenManager.Push(new SpaceGameScreen("Space", this));
+            GameServices.AddService<GameScreenService>(new GameScreenService());
 
             Textures = new Dictionary<string, Texture2D>();
 
@@ -83,7 +81,8 @@ namespace MasterBlaster
 
             Textures.Add("Star", star);
 
-            _gameScreenManager.ActiveGameScreen.Initialize();
+            GameServices.GetService<GameScreenService>().Push(new SpaceGameScreen("Space", this));
+            GameServices.GetService<GameScreenService>().ActiveGameScreen.Initialize();
         }
 
         /// <summary>
@@ -105,7 +104,7 @@ namespace MasterBlaster
             CurrentKeyboardState = Keyboard.GetState();
             CurrentMouseState = Mouse.GetState();
 
-            _gameScreenManager.ActiveGameScreen.Update(gameTime);
+            GameServices.GetService<GameScreenService>().ActiveGameScreen.Update(gameTime);
 
             LastMouseState = CurrentMouseState;
             LastKeyboardState = CurrentKeyboardState;
@@ -123,7 +122,7 @@ namespace MasterBlaster
 
             SpriteBatch.Begin();
 
-            _gameScreenManager.ActiveGameScreen.Draw(SpriteBatch);
+            GameServices.GetService<GameScreenService>().ActiveGameScreen.Draw(SpriteBatch);
       
             SpriteBatch.End();
 

@@ -41,9 +41,10 @@
     <Compile Include="Components\IUpdatableComponent.cs" />
     <Compile Include="Fireball.cs" />
     <Compile Include="GameScreens\BaseGameScreen.cs" />
-    <Compile Include="GameScreens\GameScreenManager.cs" />
+    <Compile Include="Services\GameScreenService.cs" />
     <Compile Include="GameScreens\IGameScreen.cs" />
     <Compile Include="GameScreens\SpaceGameScreen.cs" />
+    <Compile Include="Services\GameServices.cs" />
     <Compile Include="RandomGenerator.cs" />
     <Compile Include="RunGame.cs" />
     <Compile Include="Program.cs" />

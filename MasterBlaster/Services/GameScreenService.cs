@@ -1,15 +1,16 @@
-﻿using System;
+﻿using MasterBlaster.GameScreens;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MasterBlaster.GameScreens
+namespace MasterBlaster.Services
 {
-    public class GameScreenManager
+    public class GameScreenService
     {
         private Stack<IGameScreen> _gameScreens;
 
-        public GameScreenManager()
+        public GameScreenService()
         {
             _gameScreens = new Stack<IGameScreen>();
         }
