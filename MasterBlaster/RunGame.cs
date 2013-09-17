@@ -76,12 +76,21 @@ namespace MasterBlaster
             Textures.Add("Asteroid", Content.Load<Texture2D>("Asteroid"));
             Textures.Add("Fireball", Content.Load<Texture2D>("Fireball"));
 
+            Textures.Add("MainMenuBackground", Content.Load<Texture2D>("Background"));
+            Textures.Add("MainMenuTitle", Content.Load<Texture2D>("Title"));
+            Textures.Add("MainMenuNewGameButton", Content.Load<Texture2D>("NewGameButton"));
+            Textures.Add("MainMenuCreditsButton", Content.Load<Texture2D>("CreditsButton"));
+            Textures.Add("MainMenuExitButton", Content.Load<Texture2D>("ExitGameButton"));
+
+            Textures.Add("Arrow", Content.Load<Texture2D>("Arrow"));
+
             Texture2D star = new Texture2D(this.GraphicsDevice, 1, 1);
             star.SetData(new Color[] { Color.White });
 
             Textures.Add("Star", star);
 
-            GameServices.GetService<GameScreenService>().Push(new SpaceGameScreen("Space", this));
+            //GameServices.GetService<GameScreenService>().Push(new SpaceGameScreen("Space", this));
+            GameServices.GetService<GameScreenService>().Push(new MainMenuGameScreen(this));
             GameServices.GetService<GameScreenService>().ActiveGameScreen.Initialize();
         }
 
@@ -101,6 +110,10 @@ namespace MasterBlaster
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
+                Exit();
+            }
             CurrentKeyboardState = Keyboard.GetState();
             CurrentMouseState = Mouse.GetState();
 

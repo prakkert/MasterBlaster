@@ -75,10 +75,7 @@ namespace MasterBlaster.GameScreens
                 pause = !pause;
             }
 
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Game.Exit();
-
-            if (!pause && levelTime.TotalSeconds > 3)
+                     if (!pause && levelTime.TotalSeconds > 3)
             {
 
                 if (Game.CurrentKeyboardState.IsKeyUp(Keys.Left) && Game.CurrentKeyboardState.IsKeyDown(Keys.Right))
