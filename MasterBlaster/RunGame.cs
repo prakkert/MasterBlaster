@@ -35,7 +35,11 @@ namespace MasterBlaster
         public RunGame()
             : base()
         {
-            Graphics = new GraphicsDeviceManager(this);
+            var graphics = new GraphicsDeviceManager(this);
+
+            Resolution.Init(ref graphics);
+
+            Graphics = graphics;
         }
 
         /// <summary>
@@ -46,7 +50,6 @@ namespace MasterBlaster
         /// </summary>
         protected override void Initialize()
         {
-
             Graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             Graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             Graphics.SynchronizeWithVerticalRetrace = true;
@@ -60,6 +63,10 @@ namespace MasterBlaster
             GameServices.AddService<GameScreenService>(new GameScreenService());
 
             Textures = new Dictionary<string, Texture2D>();
+
+
+            Resolution.SetVirtualResolution(1920, 1080);
+            Resolution.SetResolution(1920, 1080, true);
 
             base.Initialize();
         }
@@ -76,12 +83,21 @@ namespace MasterBlaster
             Textures.Add("Asteroid", Content.Load<Texture2D>("Asteroid"));
             Textures.Add("Fireball", Content.Load<Texture2D>("Fireball"));
 
+            Textures.Add("MainMenuBackground", Content.Load<Texture2D>("Background"));
+            Textures.Add("MainMenuTitle", Content.Load<Texture2D>("Title"));
+            Textures.Add("MainMenuNewGameButton", Content.Load<Texture2D>("NewGameButton"));
+            Textures.Add("MainMenuCreditsButton", Content.Load<Texture2D>("CreditsButton"));
+            Textures.Add("MainMenuExitButton", Content.Load<Texture2D>("ExitGameButton"));
+
+            Textures.Add("Arrow", Content.Load<Texture2D>("Arrow"));
+
             Texture2D star = new Texture2D(this.GraphicsDevice, 1, 1);
             star.SetData(new Color[] { Color.White });
 
             Textures.Add("Star", star);
 
-            GameServices.GetService<GameScreenService>().Push(new SpaceGameScreen("Space", this));
+            //GameServices.GetService<GameScreenService>().Push(new SpaceGameScreen("Space", this));
+            GameServices.GetService<GameScreenService>().Push(new MainMenuGameScreen(this));
             GameServices.GetService<GameScreenService>().ActiveGameScreen.Initialize();
         }
 
@@ -101,6 +117,10 @@ namespace MasterBlaster
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
+                Exit();
+            }
             CurrentKeyboardState = Keyboard.GetState();
             CurrentMouseState = Mouse.GetState();
 
@@ -118,12 +138,14 @@ namespace MasterBlaster
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            Resolution.BeginDraw();
+
             GraphicsDevice.Clear(Color.Black);
 
-            SpriteBatch.Begin();
+            SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Resolution.getTransformationMatrix());
 
             GameServices.GetService<GameScreenService>().ActiveGameScreen.Draw(SpriteBatch);
-      
+
             SpriteBatch.End();
 
             base.Draw(gameTime);

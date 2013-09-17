@@ -41,6 +41,8 @@
     <Compile Include="Components\IUpdatableComponent.cs" />
     <Compile Include="Entities\Fireball.cs" />
     <Compile Include="GameScreens\BaseGameScreen.cs" />
+    <Compile Include="GameScreens\MainMenuGameScreen.cs" />
+    <Compile Include="Resolution.cs" />
     <Compile Include="Services\GameScreenService.cs" />
     <Compile Include="GameScreens\IGameScreen.cs" />
     <Compile Include="GameScreens\SpaceGameScreen.cs" />
@@ -77,11 +79,37 @@
     <Content Include="Content\Fireball.xnb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Background.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Creditsbutton.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ExitGameButton.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\NewGameButton.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Arrow.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Content\Originals\mainmenu.pdn" />
     <None Include="Content\Originals\Ship.png" />
+    <Content Include="Content\Originals\arrow-30-xxl.png" />
+    <Content Include="Content\Originals\Arrow.png" />
     <Content Include="Content\Originals\Asteroid.png" />
+    <Content Include="Content\Originals\Background.png" />
+    <Content Include="Content\Originals\Creditsbutton.png" />
+    <Content Include="Content\Originals\ExitGameButton.png" />
     <Content Include="Content\Originals\Fireball.png" />
+    <Content Include="Content\Originals\NewGameButton.png" />
+    <Content Include="Content\Originals\Title.png" />
     <Content Include="Icon.ico" />
     <Content Include="SDL.dll" />
+    <Content Include="Content\Title.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
