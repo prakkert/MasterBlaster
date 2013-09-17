@@ -35,7 +35,11 @@ namespace MasterBlaster
         public RunGame()
             : base()
         {
-            Graphics = new GraphicsDeviceManager(this);
+            var graphics = new GraphicsDeviceManager(this);
+
+            Resolution.Init(ref graphics);
+
+            Graphics = graphics;
         }
 
         /// <summary>
@@ -46,7 +50,6 @@ namespace MasterBlaster
         /// </summary>
         protected override void Initialize()
         {
-
             Graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             Graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             Graphics.SynchronizeWithVerticalRetrace = true;
@@ -60,6 +63,10 @@ namespace MasterBlaster
             GameServices.AddService<GameScreenService>(new GameScreenService());
 
             Textures = new Dictionary<string, Texture2D>();
+
+
+            Resolution.SetVirtualResolution(1920, 1080);
+            Resolution.SetResolution(1920, 1080, true);
 
             base.Initialize();
         }
@@ -131,12 +138,14 @@ namespace MasterBlaster
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            Resolution.BeginDraw();
+
             GraphicsDevice.Clear(Color.Black);
 
-            SpriteBatch.Begin();
+            SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Resolution.getTransformationMatrix());
 
             GameServices.GetService<GameScreenService>().ActiveGameScreen.Draw(SpriteBatch);
-      
+
             SpriteBatch.End();
 
             base.Draw(gameTime);
