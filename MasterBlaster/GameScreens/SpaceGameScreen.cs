@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MasterBlaster.Entities;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;

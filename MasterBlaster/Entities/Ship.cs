@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MasterBlaster
+namespace MasterBlaster.Entities
 {
     public class Ship
     {
@@ -68,19 +68,19 @@ namespace MasterBlaster
         {
             Direction = new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation));
 
-            Position += Direction * (int)(Speed * (gameTime.ElapsedGameTime.TotalMilliseconds/10));
+            Position += Direction * (int)(Speed * (gameTime.ElapsedGameTime.TotalMilliseconds / 10));
 
             if (Position.X > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width)
             {
                 Position = new Vector2(0, Position.Y);
             }
-            else if (Position.X< 0)
+            else if (Position.X < 0)
             {
                 Position = new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, Position.Y);
             }
             if (Position.Y > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)
             {
-                Position = new Vector2(Position.X,0);
+                Position = new Vector2(Position.X, 0);
             }
             else if (Position.Y < 0)
             {

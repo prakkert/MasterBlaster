@@ -35,11 +35,11 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Asteroid.cs" />
+    <Compile Include="Entities\Asteroid.cs" />
     <Compile Include="Components\IComponent.cs" />
     <Compile Include="Components\IDrawableComponent.cs" />
     <Compile Include="Components\IUpdatableComponent.cs" />
-    <Compile Include="Fireball.cs" />
+    <Compile Include="Entities\Fireball.cs" />
     <Compile Include="GameScreens\BaseGameScreen.cs" />
     <Compile Include="Services\GameScreenService.cs" />
     <Compile Include="GameScreens\IGameScreen.cs" />
@@ -49,7 +49,7 @@
     <Compile Include="RunGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Ship.cs" />
+    <Compile Include="Entities\Ship.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK">

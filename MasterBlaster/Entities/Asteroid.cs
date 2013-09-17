@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MasterBlaster
+namespace MasterBlaster.Entities
 {
     public class Asteroid
     {
