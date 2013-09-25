@@ -11,7 +11,6 @@ namespace MasterBlaster.GameScreens
     {
         string Name { get; }
 
-        void Initialize();
         void Activate();
         void Deactivate();
         void Update(GameTime gameTime);

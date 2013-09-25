@@ -1,4 +1,5 @@
 ﻿
+using MasterBlaster.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -8,7 +9,7 @@ using System.Text;
 
 namespace MasterBlaster.Entities
 {
-    public class Ship
+    public class Ship : BaseComponent, ICollidableComponent, IDrawableComponent
     {
         public Texture2D Texture { get; set; }
         public Vector2 Position { get; set; }
@@ -17,7 +18,9 @@ namespace MasterBlaster.Entities
         public float MaxSpeed { get; set; }
         public float Rotation { get; set; }
 
-        public Rectangle Boundaries { get; set; }
+        public bool Destroyed { get; set; }
+        
+        public Rectangle CollisionBoundaries { get; set; }
 
         public Ship(Texture2D texture, Vector2 position)
         {
@@ -28,7 +31,7 @@ namespace MasterBlaster.Entities
             Rotation = (MathHelper.Pi / 2);
             MaxSpeed = 10;
 
-            Boundaries = new Rectangle((int)(Position.X - Texture.Width / 2), (int)(Position.Y - Texture.Height / 2), Texture.Width, Texture.Height);
+            CollisionBoundaries = new Rectangle((int)(Position.X - Texture.Width / 2), (int)(Position.Y - Texture.Height / 2), Texture.Width, Texture.Height);
         }
 
         public void Accelerate()
@@ -86,7 +89,21 @@ namespace MasterBlaster.Entities
             {
                 Position = new Vector2(Position.X, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
             }
-            Boundaries = new Rectangle((int)(Position.X - Texture.Width / 2), (int)(Position.Y - Texture.Height / 2), Texture.Width, Texture.Height);
+            CollisionBoundaries = new Rectangle((int)(Position.X - Texture.Width / 2), (int)(Position.Y - Texture.Height / 2), Texture.Width, Texture.Height);
+        }
+
+
+        public void CollidedWith(ICollidableComponent component)
+        {
+            if (component is Asteroid)
+            {
+                Destroyed = true;
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(Texture, Position, null, Color.White, Rotation, new Vector2(50, 50), 1.0f, SpriteEffects.None, 0f);
         }
     }
 }

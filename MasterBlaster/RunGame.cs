@@ -60,7 +60,9 @@ namespace MasterBlaster
 
             IsFixedTimeStep = false;
 
+            GameServices.AddService<CollisionService>(new CollisionService());
             GameServices.AddService<GameScreenService>(new GameScreenService());
+            GameServices.AddService<ScoreService>(new ScoreService());
 
             Textures = new Dictionary<string, Texture2D>();
 
@@ -96,9 +98,7 @@ namespace MasterBlaster
 
             Textures.Add("Star", star);
 
-            //GameServices.GetService<GameScreenService>().Push(new SpaceGameScreen("Space", this));
             GameServices.GetService<GameScreenService>().Push(new MainMenuGameScreen(this));
-            GameServices.GetService<GameScreenService>().ActiveGameScreen.Initialize();
         }
 
         /// <summary>

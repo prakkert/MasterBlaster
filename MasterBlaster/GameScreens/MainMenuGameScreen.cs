@@ -23,11 +23,6 @@ namespace MasterBlaster.GameScreens
 
         }
 
-        public override void Initialize()
-        {
-;
-        }
-
         public override void Activate()
         {
             Selected = SelectedMenuItem.NewGame;
@@ -98,7 +93,6 @@ namespace MasterBlaster.GameScreens
                     case SelectedMenuItem.NewGame:
                         {
                             GameServices.GetService<GameScreenService>().Push(new SpaceGameScreen("Space", Game));
-                            GameServices.GetService<GameScreenService>().ActiveGameScreen.Initialize();
                             break;
                         }
                     case SelectedMenuItem.Credits:

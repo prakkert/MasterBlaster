@@ -9,9 +9,7 @@ namespace MasterBlaster.Components
 {
     public interface IComponent
     {
-        void Initialize(Game game);
-
-        void LoadContent(ContentManager content);
-        void UnloadContent();
+        Guid Id { get; }
+        bool Destroyed { get; set; }
     }
 }

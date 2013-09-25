@@ -33,6 +33,7 @@ namespace MasterBlaster.Services
 
             gameScreen.Activate();
 
+
         }
 
         public IGameScreen Pop()
