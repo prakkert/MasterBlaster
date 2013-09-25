@@ -38,7 +38,6 @@
     <Compile Include="Entities\Asteroid.cs" />
     <Compile Include="Components\BaseComponent.cs" />
     <Compile Include="Components\IControllableComponent.cs" />
-    <Compile Include="Entities\Asteroid.cs" />
     <Compile Include="Components\ICollidableComponent.cs" />
     <Compile Include="Components\IComponent.cs" />
     <Compile Include="Components\IDrawableComponent.cs" />

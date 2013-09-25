@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-﻿using MasterBlaster.Entities;
-=======
 ﻿using MasterBlaster.Components;
 using MasterBlaster.Entities;
 using MasterBlaster.Services;
->>>>>>> Architecturische aanpassingen
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
