@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using System.Threading;
 using MasterBlaster.GameScreens;
 using MasterBlaster.Services;
+using Microsoft.Xna.Framework.Audio;
 
 #endregion
 
@@ -25,6 +26,7 @@ namespace MasterBlaster
         public SpriteBatch SpriteBatch { get; private set; }
 
         public Dictionary<string, Texture2D> Textures { get; private set; }
+        public Dictionary<string, SoundEffect> SoundEffects { get; private set; }
 
         public KeyboardState LastKeyboardState { get; private set; }
         public KeyboardState CurrentKeyboardState { get; private set; }
@@ -63,9 +65,10 @@ namespace MasterBlaster
             GameServices.AddService<CollisionService>(new CollisionService());
             GameServices.AddService<GameScreenService>(new GameScreenService());
             GameServices.AddService<ScoreService>(new ScoreService());
+            GameServices.AddService<SoundService>(new SoundService());
 
             Textures = new Dictionary<string, Texture2D>();
-
+            SoundEffects = new Dictionary<string, SoundEffect>();
 
             Resolution.SetVirtualResolution(1920, 1080);
             Resolution.SetResolution(1920, 1080, true);
@@ -93,10 +96,15 @@ namespace MasterBlaster
 
             Textures.Add("Arrow", Content.Load<Texture2D>("Arrow"));
 
+
             Texture2D star = new Texture2D(this.GraphicsDevice, 1, 1);
             star.SetData(new Color[] { Color.White });
 
             Textures.Add("Star", star);
+
+            SoundEffects.Add("Explosion", Content.Load<SoundEffect>(@"Sounds\Explosion"));
+
+            GameServices.GetService<SoundService>().LoadContent(SoundEffects);
 
             GameServices.GetService<GameScreenService>().Push(new MainMenuGameScreen(this));
         }

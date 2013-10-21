@@ -74,9 +74,9 @@ namespace MasterBlaster.Entities
             if (component is Fireball)
             {
                 GameServices.GetService<ScoreService>().AddScore();
+                GameServices.GetService<SoundService>().PlayExplosion();
                 Destroyed = true;
             }
-
 
             else if (component is Asteroid)
             {
