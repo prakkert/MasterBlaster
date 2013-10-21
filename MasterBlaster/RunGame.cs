@@ -28,9 +28,6 @@ namespace MasterBlaster
         public Dictionary<string, Texture2D> Textures { get; private set; }
         public Dictionary<string, SoundEffect> SoundEffects { get; private set; }
 
-        public KeyboardState LastKeyboardState { get; private set; }
-        public KeyboardState CurrentKeyboardState { get; private set; }
-
         public MouseState LastMouseState { get; private set; }
         public MouseState CurrentMouseState { get; private set; }
 
@@ -38,6 +35,9 @@ namespace MasterBlaster
             : base()
         {
             var graphics = new GraphicsDeviceManager(this);
+
+            Textures = new Dictionary<string, Texture2D>();
+            SoundEffects = new Dictionary<string, SoundEffect>();
 
             Resolution.Init(ref graphics);
 
@@ -62,18 +62,21 @@ namespace MasterBlaster
 
             IsFixedTimeStep = false;
 
-            GameServices.AddService<CollisionService>(new CollisionService());
-            GameServices.AddService<GameScreenService>(new GameScreenService());
-            GameServices.AddService<ScoreService>(new ScoreService());
-            GameServices.AddService<SoundService>(new SoundService());
-
-            Textures = new Dictionary<string, Texture2D>();
-            SoundEffects = new Dictionary<string, SoundEffect>();
+            AddGameServices();
 
             Resolution.SetVirtualResolution(1920, 1080);
             Resolution.SetResolution(1920, 1080, true);
 
             base.Initialize();
+        }
+
+        private void AddGameServices()
+        {
+            GameServices.AddService<CollisionService>(new CollisionService());
+            GameServices.AddService<GameScreenService>(new GameScreenService());
+            GameServices.AddService<ScoreService>(new ScoreService());
+            GameServices.AddService<SoundService>(new SoundService());
+            GameServices.AddService<KeyboardService>(new KeyboardService());
         }
 
         /// <summary>
@@ -84,6 +87,21 @@ namespace MasterBlaster
         {
             Content.RootDirectory = "Content";
 
+            LoadTextures();
+            LoadSounds();
+
+            GameServices.GetService<GameScreenService>().Push(new MainMenuGameScreen(this));
+        }
+
+        private void LoadSounds()
+        {
+            SoundEffects.Add("Explosion", Content.Load<SoundEffect>(@"Sounds\Explosion"));
+
+            GameServices.GetService<SoundService>().LoadContent(SoundEffects);
+        }
+
+        private void LoadTextures()
+        {
             Textures.Add("Ship", Content.Load<Texture2D>("Ship"));
             Textures.Add("Asteroid", Content.Load<Texture2D>("Asteroid"));
             Textures.Add("Fireball", Content.Load<Texture2D>("Fireball"));
@@ -96,17 +114,10 @@ namespace MasterBlaster
 
             Textures.Add("Arrow", Content.Load<Texture2D>("Arrow"));
 
-
             Texture2D star = new Texture2D(this.GraphicsDevice, 1, 1);
             star.SetData(new Color[] { Color.White });
 
             Textures.Add("Star", star);
-
-            SoundEffects.Add("Explosion", Content.Load<SoundEffect>(@"Sounds\Explosion"));
-
-            GameServices.GetService<SoundService>().LoadContent(SoundEffects);
-
-            GameServices.GetService<GameScreenService>().Push(new MainMenuGameScreen(this));
         }
 
         /// <summary>
@@ -125,18 +136,10 @@ namespace MasterBlaster
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-            {
-                Exit();
-            }
-            CurrentKeyboardState = Keyboard.GetState();
-            CurrentMouseState = Mouse.GetState();
+            GameServices.GetService<KeyboardService>().Update(gameTime);
 
             GameServices.GetService<GameScreenService>().ActiveGameScreen.Update(gameTime);
-
-            LastMouseState = CurrentMouseState;
-            LastKeyboardState = CurrentKeyboardState;
-
+            
             base.Update(gameTime);
         }
 

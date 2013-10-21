@@ -70,10 +70,16 @@ namespace MasterBlaster.GameScreens
 
         public override void Update(GameTime gameTime)
         {
-            if (Game.CurrentKeyboardState.IsKeyDown(Keys.F12) && (Game.LastKeyboardState.IsKeyUp(Keys.F12)))
+            var keyboardService = GameServices.GetService<KeyboardService>();
+
+            if (keyboardService.IsKeyPressed(Keys.F12))
             {
                 pause = !pause;
             }
+            else if (keyboardService.IsKeyPressed(Keys.Escape))
+           {
+               GameServices.GetService<GameScreenService>().Pop();
+           }
 
             if (!pause && levelTime.TotalSeconds > 3)
             {
@@ -83,29 +89,29 @@ namespace MasterBlaster.GameScreens
 
                 Ship ship = GetComponentsOfType<Ship>().First();
 
-                if (Game.CurrentKeyboardState.IsKeyUp(Keys.Left) && Game.CurrentKeyboardState.IsKeyDown(Keys.Right))
+                if (keyboardService.IsKeyUp(Keys.Left) && keyboardService.IsKeyDown(Keys.Right))
                 {
                     ship.Right();
                 }
 
-                else if (Game.CurrentKeyboardState.IsKeyDown(Keys.Left) && Game.CurrentKeyboardState.IsKeyUp(Keys.Right))
+                else if (keyboardService.IsKeyDown(Keys.Left) && keyboardService.IsKeyUp(Keys.Right))
                 {
                     ship.Left();
                 }
 
-                if (Game.CurrentKeyboardState.IsKeyDown(Keys.Up) && Game.CurrentKeyboardState.IsKeyUp(Keys.Down))
+                if (keyboardService.IsKeyDown(Keys.Up) && keyboardService.IsKeyUp(Keys.Down))
                 {
                     ship.Accelerate();
                 }
 
-                else if (Game.CurrentKeyboardState.IsKeyUp(Keys.Up) && Game.CurrentKeyboardState.IsKeyDown(Keys.Down))
+                else if (keyboardService.IsKeyUp(Keys.Up) && keyboardService.IsKeyDown(Keys.Down))
                 {
                     ship.Decelerate();
                 }
 
                 Fireball fireball = GetComponentsOfType<Fireball>().FirstOrDefault();
 
-                if (Game.CurrentKeyboardState.IsKeyDown(Keys.LeftControl) && fireball == null)
+                if (keyboardService.IsKeyPressed(Keys.LeftControl) && fireball == null)
                 {
                     Components.Add(new Fireball(Game.Textures["Fireball"], ship.Position, ship.Direction, ship.Rotation));
                     fireball = GetComponentsOfType<Fireball>().First();

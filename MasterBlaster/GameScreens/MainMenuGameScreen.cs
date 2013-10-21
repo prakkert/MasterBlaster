@@ -36,7 +36,7 @@ namespace MasterBlaster.GameScreens
 
         public override void Update(GameTime gameTime)
         {
-            if (Game.CurrentKeyboardState.IsKeyDown(Keys.Down) && Game.LastKeyboardState.IsKeyUp(Keys.Down))
+            if (GameServices.GetService<KeyboardService>().IsKeyPressed(Keys.Down))
             {
                 switch (Selected)
                 {
@@ -61,7 +61,7 @@ namespace MasterBlaster.GameScreens
                 }
             }
 
-            if (Game.CurrentKeyboardState.IsKeyDown(Keys.Up) && Game.LastKeyboardState.IsKeyUp(Keys.Up))
+            if (GameServices.GetService<KeyboardService>().IsKeyPressed(Keys.Up))
             {
                 switch (Selected)
                 {
@@ -86,7 +86,7 @@ namespace MasterBlaster.GameScreens
                 }
             }
 
-            if (Game.CurrentKeyboardState.IsKeyDown(Keys.Enter) && Game.LastKeyboardState.IsKeyUp(Keys.Enter))
+            if (GameServices.GetService<KeyboardService>().IsKeyPressed(Keys.Enter))
             {
                 switch (Selected)
                 {
@@ -107,6 +107,10 @@ namespace MasterBlaster.GameScreens
                         }
                 }
 
+            }
+            if (GameServices.GetService<KeyboardService>().IsKeyPressed(Keys.Escape))
+            {
+                Game.Exit();
             }
         }
 
