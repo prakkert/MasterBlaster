@@ -41,6 +41,8 @@ namespace MasterBlaster
 
             Resolution.Init(ref graphics);
 
+ 
+
             Graphics = graphics;
         }
 
@@ -55,17 +57,17 @@ namespace MasterBlaster
             Graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             Graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             Graphics.SynchronizeWithVerticalRetrace = true;
-            Graphics.IsFullScreen = true;
+            Graphics.IsFullScreen = false;
             Graphics.ApplyChanges();
 
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
-            IsFixedTimeStep = false;
+            IsFixedTimeStep = true;
 
             AddGameServices();
 
             Resolution.SetVirtualResolution(1920, 1080);
-            Resolution.SetResolution(1920, 1080, true);
+            Resolution.SetResolution(1920, 1080, false);
 
             base.Initialize();
         }
