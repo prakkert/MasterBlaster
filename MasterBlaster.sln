@@ -5,28 +5,50 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterBlaster", "MasterBlas
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGame.Framework.WindowsGL", "Dependencies\MonoGame.Framework\MonoGame.Framework.WindowsGL.csproj", "{7DE47032-A904-4C29-BD22-2D235E8D91BA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterBlaster.Engine", "MasterBlaster.Engine\MasterBlaster.Engine.csproj", "{676640A3-9FAB-4C18-929D-D020E4861144}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
 		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{32231353-9756-4A7F-88BF-2377F19FB8FA}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{32231353-9756-4A7F-88BF-2377F19FB8FA}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{32231353-9756-4A7F-88BF-2377F19FB8FA}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{32231353-9756-4A7F-88BF-2377F19FB8FA}.Debug|x86.ActiveCfg = Debug|x86
 		{32231353-9756-4A7F-88BF-2377F19FB8FA}.Debug|x86.Build.0 = Debug|x86
 		{32231353-9756-4A7F-88BF-2377F19FB8FA}.Release|Any CPU.ActiveCfg = Release|x86
+		{32231353-9756-4A7F-88BF-2377F19FB8FA}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{32231353-9756-4A7F-88BF-2377F19FB8FA}.Release|Mixed Platforms.Build.0 = Release|x86
 		{32231353-9756-4A7F-88BF-2377F19FB8FA}.Release|x86.ActiveCfg = Release|x86
 		{32231353-9756-4A7F-88BF-2377F19FB8FA}.Release|x86.Build.0 = Release|x86
 		{7DE47032-A904-4C29-BD22-2D235E8D91BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7DE47032-A904-4C29-BD22-2D235E8D91BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DE47032-A904-4C29-BD22-2D235E8D91BA}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{7DE47032-A904-4C29-BD22-2D235E8D91BA}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{7DE47032-A904-4C29-BD22-2D235E8D91BA}.Debug|x86.ActiveCfg = Debug|x86
 		{7DE47032-A904-4C29-BD22-2D235E8D91BA}.Debug|x86.Build.0 = Debug|x86
 		{7DE47032-A904-4C29-BD22-2D235E8D91BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DE47032-A904-4C29-BD22-2D235E8D91BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DE47032-A904-4C29-BD22-2D235E8D91BA}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{7DE47032-A904-4C29-BD22-2D235E8D91BA}.Release|Mixed Platforms.Build.0 = Release|x86
 		{7DE47032-A904-4C29-BD22-2D235E8D91BA}.Release|x86.ActiveCfg = Release|x86
 		{7DE47032-A904-4C29-BD22-2D235E8D91BA}.Release|x86.Build.0 = Release|x86
+		{676640A3-9FAB-4C18-929D-D020E4861144}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{676640A3-9FAB-4C18-929D-D020E4861144}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{676640A3-9FAB-4C18-929D-D020E4861144}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{676640A3-9FAB-4C18-929D-D020E4861144}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{676640A3-9FAB-4C18-929D-D020E4861144}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{676640A3-9FAB-4C18-929D-D020E4861144}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{676640A3-9FAB-4C18-929D-D020E4861144}.Release|Any CPU.Build.0 = Release|Any CPU
+		{676640A3-9FAB-4C18-929D-D020E4861144}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{676640A3-9FAB-4C18-929D-D020E4861144}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{676640A3-9FAB-4C18-929D-D020E4861144}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
