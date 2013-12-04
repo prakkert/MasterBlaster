@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MasterBlaster
+namespace MasterBlaster.Engine
 {
-    static class Resolution
+    public static class Resolution
     {
         static private GraphicsDeviceManager _Device = null;
 

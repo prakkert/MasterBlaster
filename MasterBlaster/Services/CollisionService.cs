@@ -1,4 +1,6 @@
 ﻿using MasterBlaster.Components;
+using MasterBlaster.Engine;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +8,7 @@ using System.Text;
 
 namespace MasterBlaster.Services
 {
-    public class CollisionService
+    public class CollisionService : IUpdatableComponent
     {
         public void CheckForCollisions(List<ICollidableComponent> components)
         {
@@ -21,6 +23,11 @@ namespace MasterBlaster.Services
                     }
                 }
             }
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            throw new NotImplementedException();
         }
     }
 }

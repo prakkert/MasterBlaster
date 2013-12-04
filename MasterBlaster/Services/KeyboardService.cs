@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MasterBlaster.Components;
+using MasterBlaster.Engine;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -7,7 +9,7 @@ using System.Text;
 
 namespace MasterBlaster.Services
 {
-    public class KeyboardService
+    public class KeyboardService : IUpdatableComponent
     {
         public KeyboardState LastKeyboardState { get; private set; }
         public KeyboardState CurrentKeyboardState { get; private set; }

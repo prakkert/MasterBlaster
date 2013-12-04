@@ -1,4 +1,5 @@
 ﻿using MasterBlaster.Components;
+using MasterBlaster.Engine;
 using MasterBlaster.Entities;
 using MasterBlaster.Services;
 using Microsoft.Xna.Framework;
@@ -22,7 +23,7 @@ namespace MasterBlaster.GameScreens
 
         private List<Vector2> starPoints;
 
-        public SpaceGameScreen(string name, RunGame game)
+        public SpaceGameScreen(string name, BaseGame game)
             : base(name, game)
         {
             Game.IsMouseVisible = false;
@@ -55,7 +56,7 @@ namespace MasterBlaster.GameScreens
 
             levelTime = new TimeSpan();
 
-            GameServices.GetService<ScoreService>().ResetScore();
+            Game.ComponentStore.GetSingle<ScoreService>().ResetScore();
         }
 
         public override void Activate()
@@ -70,7 +71,8 @@ namespace MasterBlaster.GameScreens
 
         public override void Update(GameTime gameTime)
         {
-            var keyboardService = GameServices.GetService<KeyboardService>();
+            base.Update(gameTime);
+            var keyboardService = Game.ComponentStore.GetSingle<KeyboardService>();
 
             if (keyboardService.IsKeyPressed(Keys.F12))
             {
@@ -78,14 +80,14 @@ namespace MasterBlaster.GameScreens
             }
             else if (keyboardService.IsKeyPressed(Keys.Escape))
            {
-               GameServices.GetService<GameScreenService>().Pop();
+               Game.GameScreenService.Pop();
            }
 
             if (!pause && levelTime.TotalSeconds > 3)
             {
 
                 List<ICollidableComponent> collidableComponents = GetComponentsOfType<ICollidableComponent>();
-                GameServices.GetService<CollisionService>().CheckForCollisions(collidableComponents);
+                Game.ComponentStore.GetSingle<CollisionService>().CheckForCollisions(collidableComponents);
 
                 Ship ship = GetComponentsOfType<Ship>().First();
 
@@ -122,7 +124,7 @@ namespace MasterBlaster.GameScreens
 
                 if (fireball != null)
                 {
-                    fireball.Update(gameTime);
+                //    fireball.Update(gameTime);
 
                     if (fireball.Destroyed)
                     {
@@ -134,7 +136,7 @@ namespace MasterBlaster.GameScreens
 
                 foreach (Asteroid asteroid in asteroids)
                 {
-                    asteroid.Update(gameTime);
+                //    asteroid.Update(gameTime);
                 }
 
                 while (GetComponentsOfType<Asteroid>().Count < 5)
@@ -151,7 +153,7 @@ namespace MasterBlaster.GameScreens
 
             levelTime += gameTime.ElapsedGameTime;
 
-            base.Update(gameTime);
+         //   base.Update(gameTime);
         }
 
         
@@ -180,7 +182,7 @@ namespace MasterBlaster.GameScreens
 
 
 
-            spriteBatch.DrawString(defaultFont, "Points: " + GameServices.GetService<ScoreService>().Points, new Vector2(10, 10), Color.Red);
+            spriteBatch.DrawString(defaultFont, "Points: " + Game.ComponentStore.GetSingle<ScoreService>().Points, new Vector2(10, 10), Color.Red);
           //  spriteBatch.DrawString(defaultFont, "Speed: " + Math.Round(GetComponentsOfType<Ship>().First().Speed, 1), new Vector2(10, 30), Color.Red);
             spriteBatch.DrawString(defaultFont, "FPS: " + fps, new Vector2(10, 50), Color.Red);
             spriteBatch.DrawString(defaultFont, "Memory: " + Math.Round((double)GC.GetTotalMemory(true) / 1024 / 1024,1) + " mB", new Vector2(10, 70), Color.Red);

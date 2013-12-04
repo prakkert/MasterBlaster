@@ -1,10 +1,9 @@
-﻿using MasterBlaster.GameScreens;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MasterBlaster.Services
+namespace MasterBlaster.Engine
 {
     public class GameScreenService
     {

@@ -5,11 +5,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MasterBlaster.Components
+namespace MasterBlaster.Engine
 {
-    public interface IDrawableComponent : IComponent
+    public interface IGameScreen
     {
-        Texture2D Texture { get; set; }
+        string Name { get; }
+
+        void Activate();
+        void Deactivate();
+        void Update(GameTime gameTime);
         void Draw(SpriteBatch spriteBatch);
     }
 }

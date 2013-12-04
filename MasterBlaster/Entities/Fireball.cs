@@ -1,4 +1,5 @@
 ﻿using MasterBlaster.Components;
+using MasterBlaster.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -8,7 +9,7 @@ using System.Text;
 
 namespace MasterBlaster.Entities
 {
-    public class Fireball : BaseComponent, ICollidableComponent, IDrawableComponent
+    public class Fireball : BaseComponent, ICollidableComponent, IDrawableComponent, IMovableComponent
     {
         public Texture2D Texture { get; set; }
         public Vector2 Position { get; set; }
@@ -18,8 +19,6 @@ namespace MasterBlaster.Entities
         public float Rotation { get; set; }
 
         public Rectangle CollisionBoundaries { get; set; }
-
-        public bool Destroyed { get; set; }
 
         public Fireball(Texture2D texture, Vector2 position, Vector2 direction, float rotation)
         {
@@ -38,7 +37,27 @@ namespace MasterBlaster.Entities
             }
         }
 
-        public void Update(GameTime gameTime)
+        internal void Destroy()
+        {
+            Destroyed = true;
+        }
+
+
+        public void CollidedWith(ICollidableComponent component)
+        {
+            if (component is Asteroid)
+            {
+                Destroyed = true;
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(Texture, Position, null, Color.White, Rotation, new Vector2(25, 12), 1.0f, SpriteEffects.None, 0f);
+        }
+
+
+        public void Move(GameTime gameTime)
         {
             if (!Destroyed)
             {
@@ -71,26 +90,6 @@ namespace MasterBlaster.Entities
 
                 CollisionBoundaries = new Rectangle((int)(Position.X - Texture.Width / 2), (int)(Position.Y - Texture.Height / 2), (int)(Texture.Width), (int)(Texture.Height));
             }
-
-        }
-
-        internal void Destroy()
-        {
-            Destroyed = true;
-        }
-
-
-        public void CollidedWith(ICollidableComponent component)
-        {
-            if (component is Asteroid)
-            {
-                Destroyed = true;
-            }
-        }
-
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(Texture, Position, null, Color.White, Rotation, new Vector2(25, 12), 1.0f, SpriteEffects.None, 0f);
         }
     }
 }

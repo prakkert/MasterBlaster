@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MasterBlaster.Components
+namespace MasterBlaster.Engine
 {
     public interface IComponent
     {
-        Guid Id { get; }
-        bool Destroyed { get; set; }
+       // Guid Id { get; }
+      //  bool Destroyed { get; set; }
     }
 }

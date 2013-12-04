@@ -1,5 +1,6 @@
 ﻿
 using MasterBlaster.Components;
+using MasterBlaster.Engine;
 using MasterBlaster.Services;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,7 +11,7 @@ using System.Text;
 
 namespace MasterBlaster.Entities
 {
-    public class Asteroid : BaseComponent, ICollidableComponent, IDrawableComponent, IControllableComponent
+    public class Asteroid : BaseComponent, ICollidableComponent, IDrawableComponent, IMovableComponent
     {
         public Texture2D Texture { get; set; }
         public Vector2 Position { get; set; }
@@ -20,8 +21,6 @@ namespace MasterBlaster.Entities
         public float RotationSpeed { get; set; }
 
         public float Size { get; set; }
-
-        public bool Destroyed { get; set; }
 
         public Rectangle CollisionBoundaries { get; set; }
 
@@ -39,7 +38,33 @@ namespace MasterBlaster.Entities
             Size = RandomGenerator.Get.Next(10, 25) / 10;
         }
 
-        public void Update(GameTime gameTime)
+        public void CollidedWith(ICollidableComponent component)
+        {
+            if (component is Fireball)
+            {
+                //GetService<ScoreService>().AddScore();
+                //GameServices.GetService<SoundService>().PlayExplosion();
+                Destroyed = true;
+            }
+
+            else if (component is Asteroid)
+            {
+              
+            }
+
+            else if (component is Ship)
+            {
+                Destroyed = true;
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(Texture, Position, null, Color.White, Rotation, new Vector2(25, 25), Size, SpriteEffects.None, 0f);
+        }
+
+
+        public void Move(GameTime gameTime)
         {
             if (!Destroyed)
             {
@@ -67,31 +92,6 @@ namespace MasterBlaster.Entities
 
                 CollisionBoundaries = new Rectangle((int)(Position.X - Texture.Width * Size / 2), (int)(Position.Y - Texture.Height * Size / 2), (int)(Texture.Width * Size), (int)(Texture.Height * Size));
             }
-        }
-
-        public void CollidedWith(ICollidableComponent component)
-        {
-            if (component is Fireball)
-            {
-                GameServices.GetService<ScoreService>().AddScore();
-                GameServices.GetService<SoundService>().PlayExplosion();
-                Destroyed = true;
-            }
-
-            else if (component is Asteroid)
-            {
-              
-            }
-
-            else if (component is Ship)
-            {
-                Destroyed = true;
-            }
-        }
-
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(Texture, Position, null, Color.White, Rotation, new Vector2(25, 25), Size, SpriteEffects.None, 0f);
         }
     }
 }

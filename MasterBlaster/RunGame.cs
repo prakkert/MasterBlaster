@@ -12,6 +12,8 @@ using System.Threading;
 using MasterBlaster.GameScreens;
 using MasterBlaster.Services;
 using Microsoft.Xna.Framework.Audio;
+using MasterBlaster.Engine;
+using MasterBlaster.Components;
 
 #endregion
 
@@ -20,30 +22,17 @@ namespace MasterBlaster
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class RunGame : Game
+    public class RunGame : BaseGame
     {
-        public GraphicsDeviceManager Graphics { get; private set; }
-        public SpriteBatch SpriteBatch { get; private set; }
-
-        public Dictionary<string, Texture2D> Textures { get; private set; }
-        public Dictionary<string, SoundEffect> SoundEffects { get; private set; }
-
         public MouseState LastMouseState { get; private set; }
         public MouseState CurrentMouseState { get; private set; }
 
         public RunGame()
             : base()
         {
-            var graphics = new GraphicsDeviceManager(this);
+                     
 
-            Textures = new Dictionary<string, Texture2D>();
-            SoundEffects = new Dictionary<string, SoundEffect>();
-
-            Resolution.Init(ref graphics);
-
- 
-
-            Graphics = graphics;
+            Resolution.Init(ref _graphics);
         }
 
         /// <summary>
@@ -54,13 +43,11 @@ namespace MasterBlaster
         /// </summary>
         protected override void Initialize()
         {
-            Graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            Graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            Graphics.SynchronizeWithVerticalRetrace = true;
-            Graphics.IsFullScreen = false;
-            Graphics.ApplyChanges();
-
-            SpriteBatch = new SpriteBatch(GraphicsDevice);
+            _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            _graphics.SynchronizeWithVerticalRetrace = true;
+            _graphics.IsFullScreen = false;
+            _graphics.ApplyChanges();
 
             IsFixedTimeStep = true;
 
@@ -74,11 +61,12 @@ namespace MasterBlaster
 
         private void AddGameServices()
         {
-            GameServices.AddService<CollisionService>(new CollisionService());
-            GameServices.AddService<GameScreenService>(new GameScreenService());
-            GameServices.AddService<ScoreService>(new ScoreService());
-            GameServices.AddService<SoundService>(new SoundService());
-            GameServices.AddService<KeyboardService>(new KeyboardService());
+            ComponentStore.Add<CollisionService>(new CollisionService());
+            // ComponentStore.Add<GameScreenService>(new GameScreenService());
+            ComponentStore.Add<ScoreService>(new ScoreService());
+            ComponentStore.Add<SoundService>(new SoundService());
+            ComponentStore.Add<KeyboardService>(new KeyboardService());
+            ComponentStore.Add<MovementService>(new MovementService());
         }
 
         /// <summary>
@@ -92,14 +80,14 @@ namespace MasterBlaster
             LoadTextures();
             LoadSounds();
 
-            GameServices.GetService<GameScreenService>().Push(new MainMenuGameScreen(this));
+            GameScreenService.Push(new MainMenuGameScreen(this));
         }
 
         private void LoadSounds()
         {
             SoundEffects.Add("Explosion", Content.Load<SoundEffect>(@"Sounds\Explosion"));
 
-            GameServices.GetService<SoundService>().LoadContent(SoundEffects);
+            ComponentStore.GetSingle<SoundService>().LoadContent(SoundEffects);
         }
 
         private void LoadTextures()
@@ -138,10 +126,6 @@ namespace MasterBlaster
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            GameServices.GetService<KeyboardService>().Update(gameTime);
-
-            GameServices.GetService<GameScreenService>().ActiveGameScreen.Update(gameTime);
-            
             base.Update(gameTime);
         }
 
@@ -155,13 +139,11 @@ namespace MasterBlaster
 
             GraphicsDevice.Clear(Color.Black);
 
-            SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Resolution.getTransformationMatrix());
+            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Resolution.getTransformationMatrix());
 
-            GameServices.GetService<GameScreenService>().ActiveGameScreen.Draw(SpriteBatch);
+            GameScreenService.ActiveGameScreen.Draw(_spriteBatch);
 
-            SpriteBatch.End();
-
-            base.Draw(gameTime);
+            _spriteBatch.End();
         }
     }
 }

@@ -1,3 +1,4 @@
+using MasterBlaster.Engine;
 using MasterBlaster.Services;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,7 +9,7 @@ using System.Linq;
 
 namespace MasterBlaster.GameScreens
 {
-    public partial class MainMenuGameScreen : BaseGameScreen
+    public class MainMenuGameScreen : BaseGameScreen
     {
         public SelectedMenuItem Selected { get; private set; }
 
@@ -36,7 +37,7 @@ namespace MasterBlaster.GameScreens
 
         public override void Update(GameTime gameTime)
         {
-            if (GameServices.GetService<KeyboardService>().IsKeyPressed(Keys.Down))
+            if (Game.ComponentStore.GetSingle<KeyboardService>().IsKeyPressed(Keys.Down))
             {
                 switch (Selected)
                 {
@@ -61,7 +62,7 @@ namespace MasterBlaster.GameScreens
                 }
             }
 
-            if (GameServices.GetService<KeyboardService>().IsKeyPressed(Keys.Up))
+            if (Game.ComponentStore.GetSingle<KeyboardService>().IsKeyPressed(Keys.Up))
             {
                 switch (Selected)
                 {
@@ -86,13 +87,13 @@ namespace MasterBlaster.GameScreens
                 }
             }
 
-            if (GameServices.GetService<KeyboardService>().IsKeyPressed(Keys.Enter))
+            if (Game.ComponentStore.GetSingle<KeyboardService>().IsKeyPressed(Keys.Enter))
             {
                 switch (Selected)
                 {
                     case SelectedMenuItem.NewGame:
                         {
-                            GameServices.GetService<GameScreenService>().Push(new SpaceGameScreen("Space", Game));
+                            Game.GameScreenService.Push(new SpaceGameScreen("Space", Game));
                             break;
                         }
                     case SelectedMenuItem.Credits:
@@ -108,7 +109,7 @@ namespace MasterBlaster.GameScreens
                 }
 
             }
-            if (GameServices.GetService<KeyboardService>().IsKeyPressed(Keys.Escape))
+            if (Game.ComponentStore.GetSingle<KeyboardService>().IsKeyPressed(Keys.Escape))
             {
                 Game.Exit();
             }

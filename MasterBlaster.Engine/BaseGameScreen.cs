@@ -1,4 +1,4 @@
-﻿using MasterBlaster.Components;
+﻿using MasterBlaster.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -6,21 +6,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MasterBlaster.GameScreens
+namespace MasterBlaster.Engine
 {
     public abstract class BaseGameScreen : IGameScreen
     {
         public string Name { get; protected set; }
-        public RunGame Game { get; private set; }
+        public BaseGame Game { get; private set; }
 
         public List<IComponent> Components { get; protected set; }
 
-        public BaseGameScreen(string name, RunGame game)
+        public BaseGameScreen(string name, BaseGame game, List<IComponent> components = null)
         {
             Game = game;
             Name = name;
 
-            Components = new List<IComponent>();
+            if (components == null)
+            {
+                Components = new List<IComponent>();
+            }
+            else
+            {
+                Components = components;
+            }
         }
 
         public abstract void Activate();
@@ -29,6 +36,8 @@ namespace MasterBlaster.GameScreens
 
         public virtual void Update(GameTime gameTime)
         {
+            var updatableServices = Game.ComponentStore.GetAllOfType<IUpdatableComponent>();
+
             RemoveDestroyedItems();
         }
 
@@ -51,7 +60,7 @@ namespace MasterBlaster.GameScreens
 
         public void RemoveDestroyedItems()
         {
-            Components.RemoveAll(c => c.Destroyed);
+          //  Components.RemoveAll(c => c.Destroyed);
         }
 
         public void DrawBorder(SpriteBatch spriteBatch, Texture2D pixel, Rectangle rectangleToDraw, int thicknessOfBorder, Color borderColor)
