@@ -21,7 +21,7 @@ namespace MasterBlaster.GameScreens
 
         public MainMenuGameScreen(RunGame game) : base("MainMenu", game)
         {
-
+            Components.Add<KeyboardService>(new KeyboardService());
         }
 
         public override void Activate()
@@ -37,7 +37,9 @@ namespace MasterBlaster.GameScreens
 
         public override void Update(GameTime gameTime)
         {
-            if (Game.ComponentStore.GetSingle<KeyboardService>().IsKeyPressed(Keys.Down))
+            base.Update(gameTime);
+
+            if (Components.GetSingle<KeyboardService>().IsKeyPressed(Keys.Down))
             {
                 switch (Selected)
                 {
@@ -62,7 +64,7 @@ namespace MasterBlaster.GameScreens
                 }
             }
 
-            if (Game.ComponentStore.GetSingle<KeyboardService>().IsKeyPressed(Keys.Up))
+            if (Components.GetSingle<KeyboardService>().IsKeyPressed(Keys.Up))
             {
                 switch (Selected)
                 {
@@ -87,7 +89,7 @@ namespace MasterBlaster.GameScreens
                 }
             }
 
-            if (Game.ComponentStore.GetSingle<KeyboardService>().IsKeyPressed(Keys.Enter))
+            if (Components.GetSingle<KeyboardService>().IsKeyPressed(Keys.Enter))
             {
                 switch (Selected)
                 {
@@ -109,7 +111,7 @@ namespace MasterBlaster.GameScreens
                 }
 
             }
-            if (Game.ComponentStore.GetSingle<KeyboardService>().IsKeyPressed(Keys.Escape))
+            if (Components.GetSingle<KeyboardService>().IsKeyPressed(Keys.Escape))
             {
                 Game.Exit();
             }

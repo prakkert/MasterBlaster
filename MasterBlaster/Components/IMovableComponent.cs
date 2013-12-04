@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MasterBlaster.Engine;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace MasterBlaster.Components
 {
-    public interface IMovableComponent
+    public interface IMovableComponent : IComponent
     {
         Vector2 Position { get; set; }
         Vector2 Direction { get; set; }

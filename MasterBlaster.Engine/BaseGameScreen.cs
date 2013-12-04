@@ -13,7 +13,7 @@ namespace MasterBlaster.Engine
         public string Name { get; protected set; }
         public BaseGame Game { get; private set; }
 
-        public List<IComponent> Components { get; protected set; }
+        public ComponentStore Components { get; private set; }
 
         public BaseGameScreen(string name, BaseGame game, List<IComponent> components = null)
         {
@@ -22,11 +22,11 @@ namespace MasterBlaster.Engine
 
             if (components == null)
             {
-                Components = new List<IComponent>();
+                Components = new ComponentStore();
             }
             else
             {
-                Components = components;
+                Components = new ComponentStore(components);
             }
         }
 
@@ -36,26 +36,24 @@ namespace MasterBlaster.Engine
 
         public virtual void Update(GameTime gameTime)
         {
-            var updatableServices = Game.ComponentStore.GetAllOfType<IUpdatableComponent>();
+            var updatableComponents = Components.GetAllOfType<IUpdatableComponent>();
+
+            foreach (var updatableComponent in updatableComponents)
+            {
+                updatableComponent.Update(gameTime);
+            }
 
             RemoveDestroyedItems();
         }
 
-        public abstract void Draw(SpriteBatch spriteBatch);
-
-        public List<T> GetComponentsOfType<T>()
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
-            List<T> items = new List<T>();
+            List<IDrawableComponent> drawableComponents = Components.GetAllOfType<IDrawableComponent>();
 
-            foreach (var component in Components)
+            foreach (var drawableComponent in drawableComponents)
             {
-                if (component is T)
-                {
-                    items.Add((T)component);
-                }
+                drawableComponent.Draw(spriteBatch);
             }
-
-            return items;
         }
 
         public void RemoveDestroyedItems()

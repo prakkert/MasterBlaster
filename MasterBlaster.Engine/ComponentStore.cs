@@ -45,5 +45,10 @@ namespace MasterBlaster.Engine
 
            return new List<T>(selectedComponents.Cast<T>());
        }
+
+       public void Clear()
+       {
+           _components = new List<IComponent>();
+       }
     }
 }

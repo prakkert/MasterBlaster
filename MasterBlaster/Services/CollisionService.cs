@@ -10,24 +10,28 @@ namespace MasterBlaster.Services
 {
     public class CollisionService : IUpdatableComponent
     {
-        public void CheckForCollisions(List<ICollidableComponent> components)
+        private ComponentStore _components;
+
+        public CollisionService(IHasComponentStore game)
         {
-            for (int i = 0; i < components.Count; i++)
-            {
-                for (int j = i + 1; j < components.Count; j++)
-                {
-                    if (components[i] != null && components[j] != null && components[i].CollisionBoundaries.Intersects(components[j].CollisionBoundaries))
-                    {
-                        components[i].CollidedWith(components[j]);
-                        components[j].CollidedWith(components[i]);
-                    }
-                }
-            }
+            _components = game.Components;
         }
 
         public void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            List<ICollidableComponent> collidableComponents = _components.GetAllOfType<ICollidableComponent>();
+
+            for (int i = 0; i < collidableComponents.Count; i++)
+            {
+                for (int j = i + 1; j < collidableComponents.Count; j++)
+                {
+                    if (collidableComponents[i] != null && collidableComponents[j] != null && collidableComponents[i].CollisionBoundaries.Intersects(collidableComponents[j].CollisionBoundaries))
+                    {
+                        collidableComponents[i].CollidedWith(collidableComponents[j]);
+                        collidableComponents[j].CollidedWith(collidableComponents[i]);
+                    }
+                }
+            }
         }
     }
 }

@@ -18,14 +18,14 @@ namespace MasterBlaster.Engine
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public abstract class BaseGame : Game
+    public abstract class BaseGame : Game, IHasComponentStore
     {
         protected GraphicsDeviceManager _graphics;
         protected SpriteBatch _spriteBatch;
 
         public GameScreenService GameScreenService { get; protected set; }
 
-        public ComponentStore ComponentStore { get; private set; }
+        public new ComponentStore Components { get; private set; }
 
         public Dictionary<string, Texture2D> Textures { get; private set; }
         public Dictionary<string, SoundEffect> SoundEffects { get; private set; }
@@ -34,11 +34,13 @@ namespace MasterBlaster.Engine
             : base()
         {
             _graphics = new GraphicsDeviceManager(this);
-            ComponentStore = new ComponentStore();
+            Components = new ComponentStore();
             GameScreenService = new GameScreenService();
 
             Textures = new Dictionary<string, Texture2D>();
             SoundEffects = new Dictionary<string, SoundEffect>();
+
+            Resolution.Init(ref _graphics);
         }
 
         /// <summary>
@@ -49,7 +51,7 @@ namespace MasterBlaster.Engine
         /// </summary>
         protected override void Initialize()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteBatch = new SpriteBatch(_graphics.GraphicsDevice);
             base.Initialize();
         }
 
@@ -61,14 +63,14 @@ namespace MasterBlaster.Engine
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            var updatableComponents = ComponentStore.GetAllOfType<IUpdatableComponent>();
+            var updatableComponents = Components.GetAllOfType<IUpdatableComponent>();
 
             foreach (var updatableComponent in updatableComponents)
             {
                 updatableComponent.Update(gameTime);
             }
 
-            base.Update(gameTime);
+            GameScreenService.ActiveGameScreen.Update(gameTime);
         }
 
         /// <summary>
@@ -77,31 +79,22 @@ namespace MasterBlaster.Engine
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            var drawableComponents = ComponentStore.GetAllOfType<IDrawableComponent>();
+            Resolution.BeginDraw();
+
+            _graphics.GraphicsDevice.Clear(Color.Black);
+
+            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Resolution.getTransformationMatrix());
+
+            List<IDrawableComponent> drawableComponents = Components.GetAllOfType<IDrawableComponent>();
 
             foreach (var drawableComponent in drawableComponents)
             {
                 drawableComponent.Draw(_spriteBatch);
             }
 
+            GameScreenService.ActiveGameScreen.Draw(_spriteBatch);
+            _spriteBatch.End();
             base.Draw(gameTime);
         }
-
-        protected override bool BeginDraw()
-        {
-            Resolution.BeginDraw();
-
-            GraphicsDevice.Clear(Color.Black);
-
-            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Resolution.getTransformationMatrix());
-
-            return base.BeginDraw();
-        }
-
-        protected override void EndDraw()
-        {
-            _spriteBatch.End();
-        }
-
     }
 }

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MasterBlaster.Services
 {
-    public class ScoreService : IUpdatableComponent
+    public class ScoreService : IServiceComponent
     {
        public int Points { get; private set; }
 
@@ -19,11 +19,6 @@ namespace MasterBlaster.Services
        public void ResetScore()
        {
            Points = 0;
-       }
-
-       public void Update(Microsoft.Xna.Framework.GameTime gameTime)
-       {
-           throw new NotImplementedException();
        }
     }
 }

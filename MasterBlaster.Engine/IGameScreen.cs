@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MasterBlaster.Engine
 {
-    public interface IGameScreen
+    public interface IGameScreen : IHasComponentStore
     {
         string Name { get; }
 

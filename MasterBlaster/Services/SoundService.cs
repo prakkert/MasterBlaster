@@ -9,7 +9,7 @@ using System.Text;
 
 namespace MasterBlaster.Services
 {
-    public class SoundService : IUpdatableComponent
+    public class SoundService : IServiceComponent
     {
         public Dictionary<string, SoundEffect> SoundEffects;
 
@@ -18,7 +18,7 @@ namespace MasterBlaster.Services
             SoundEffects = new Dictionary<string, SoundEffect>();
         }
 
-        public void LoadContent(Dictionary<string,SoundEffect> soundEffects)
+        public void LoadContent(Dictionary<string, SoundEffect> soundEffects)
         {
             SoundEffects = soundEffects;
         }
@@ -33,26 +33,5 @@ namespace MasterBlaster.Services
             PlaySoundEffect("Explosion");
         }
 
-        public void Update(GameTime gameTime)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Guid Id
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public bool Destroyed
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
     }
 }

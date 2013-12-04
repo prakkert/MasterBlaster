@@ -11,7 +11,7 @@ namespace MasterBlaster.Services
     {
         public void Update(Microsoft.Xna.Framework.GameTime gameTime)
         {
-            throw new NotImplementedException();
+
         }
     }
 }

@@ -28,6 +28,11 @@ namespace MasterBlaster.GameScreens
         {
             Game.IsMouseVisible = false;
 
+            Components.Add<CollisionService>(new CollisionService(this));
+            Components.Add<ScoreService>(new ScoreService());
+            Components.Add<KeyboardService>(new KeyboardService());
+            Components.Add<MovementService>(new MovementService());
+
             Reset();
         }
 
@@ -35,7 +40,9 @@ namespace MasterBlaster.GameScreens
         {
             Game.ResetElapsedTime();
 
-            Components.Clear();
+            Components.RemoveAll<Ship>();
+            Components.RemoveAll<Asteroid>();
+            Components.RemoveAll<Fireball>();
 
             Components.Add(new Ship(Game.Textures["Ship"], new Vector2((int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2), (int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2))));
 
@@ -56,7 +63,7 @@ namespace MasterBlaster.GameScreens
 
             levelTime = new TimeSpan();
 
-            Game.ComponentStore.GetSingle<ScoreService>().ResetScore();
+            Components.GetSingle<ScoreService>().ResetScore();
         }
 
         public override void Activate()
@@ -72,7 +79,15 @@ namespace MasterBlaster.GameScreens
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            var keyboardService = Game.ComponentStore.GetSingle<KeyboardService>();
+
+            var movableComponents = Components.GetAllOfType<IMovableComponent>();
+
+            foreach (var component in movableComponents)
+            {
+                component.Move(gameTime);
+            }
+
+            var keyboardService = Components.GetSingle<KeyboardService>();
 
             if (keyboardService.IsKeyPressed(Keys.F12))
             {
@@ -86,10 +101,7 @@ namespace MasterBlaster.GameScreens
             if (!pause && levelTime.TotalSeconds > 3)
             {
 
-                List<ICollidableComponent> collidableComponents = GetComponentsOfType<ICollidableComponent>();
-                Game.ComponentStore.GetSingle<CollisionService>().CheckForCollisions(collidableComponents);
-
-                Ship ship = GetComponentsOfType<Ship>().First();
+                Ship ship = Components.GetSingle<Ship>();
 
                 if (keyboardService.IsKeyUp(Keys.Left) && keyboardService.IsKeyDown(Keys.Right))
                 {
@@ -111,12 +123,12 @@ namespace MasterBlaster.GameScreens
                     ship.Decelerate();
                 }
 
-                Fireball fireball = GetComponentsOfType<Fireball>().FirstOrDefault();
+                Fireball fireball = Components.GetAllOfType<Fireball>().FirstOrDefault();
 
                 if (keyboardService.IsKeyPressed(Keys.LeftControl) && fireball == null)
                 {
                     Components.Add(new Fireball(Game.Textures["Fireball"], ship.Position, ship.Direction, ship.Rotation));
-                    fireball = GetComponentsOfType<Fireball>().First();
+                    fireball = Components.GetAllOfType<Fireball>().First();
                 }
 
 
@@ -128,18 +140,18 @@ namespace MasterBlaster.GameScreens
 
                     if (fireball.Destroyed)
                     {
-                        Components.Remove(fireball);
+                        Components.Remove<Fireball>(fireball);
                     }
                 }
 
-                var asteroids = GetComponentsOfType<Asteroid>();
+                var asteroids = Components.GetAllOfType<Asteroid>();
 
                 foreach (Asteroid asteroid in asteroids)
                 {
                 //    asteroid.Update(gameTime);
                 }
 
-                while (GetComponentsOfType<Asteroid>().Count < 5)
+                while (Components.GetAllOfType<Asteroid>().Count < 5)
                 {
                     Components.Add(new Asteroid(Game.Textures["Asteroid"]));
                 }
@@ -160,17 +172,15 @@ namespace MasterBlaster.GameScreens
     
         public override void Draw(SpriteBatch spriteBatch)
         {
-            var drawableComponents = GetComponentsOfType<IDrawableComponent>();
+            base.Draw(spriteBatch);
 
-            foreach (var component in drawableComponents)
+            var collidableComponents = Components.GetAllOfType<ICollidableComponent>();
+
+            foreach (var component in collidableComponents)
             {
-                component.Draw(spriteBatch);
-
                 if (component is ICollidableComponent)
                 {
-                    var collidableComponent = (ICollidableComponent)component;
-                    DrawBorder(spriteBatch, Game.Textures["Star"], collidableComponent.CollisionBoundaries, 1, Color.Red);
-
+                    DrawBorder(spriteBatch, Game.Textures["Star"], component.CollisionBoundaries, 1, Color.Red);
                 }
                           
             }
@@ -182,7 +192,7 @@ namespace MasterBlaster.GameScreens
 
 
 
-            spriteBatch.DrawString(defaultFont, "Points: " + Game.ComponentStore.GetSingle<ScoreService>().Points, new Vector2(10, 10), Color.Red);
+            spriteBatch.DrawString(defaultFont, "Points: " + Components.GetSingle<ScoreService>().Points, new Vector2(10, 10), Color.Red);
           //  spriteBatch.DrawString(defaultFont, "Speed: " + Math.Round(GetComponentsOfType<Ship>().First().Speed, 1), new Vector2(10, 30), Color.Red);
             spriteBatch.DrawString(defaultFont, "FPS: " + fps, new Vector2(10, 50), Color.Red);
             spriteBatch.DrawString(defaultFont, "Memory: " + Math.Round((double)GC.GetTotalMemory(true) / 1024 / 1024,1) + " mB", new Vector2(10, 70), Color.Red);

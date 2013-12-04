@@ -30,8 +30,6 @@ namespace MasterBlaster
         public RunGame()
             : base()
         {
-                     
-
             Resolution.Init(ref _graphics);
         }
 
@@ -46,7 +44,7 @@ namespace MasterBlaster
             _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             _graphics.SynchronizeWithVerticalRetrace = true;
-            _graphics.IsFullScreen = false;
+            _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
 
             IsFixedTimeStep = true;
@@ -61,12 +59,7 @@ namespace MasterBlaster
 
         private void AddGameServices()
         {
-            ComponentStore.Add<CollisionService>(new CollisionService());
-            // ComponentStore.Add<GameScreenService>(new GameScreenService());
-            ComponentStore.Add<ScoreService>(new ScoreService());
-            ComponentStore.Add<SoundService>(new SoundService());
-            ComponentStore.Add<KeyboardService>(new KeyboardService());
-            ComponentStore.Add<MovementService>(new MovementService());
+            Components.Add<SoundService>(new SoundService());
         }
 
         /// <summary>
@@ -87,7 +80,7 @@ namespace MasterBlaster
         {
             SoundEffects.Add("Explosion", Content.Load<SoundEffect>(@"Sounds\Explosion"));
 
-            ComponentStore.GetSingle<SoundService>().LoadContent(SoundEffects);
+            Components.GetSingle<SoundService>().LoadContent(SoundEffects);
         }
 
         private void LoadTextures()
@@ -116,7 +109,7 @@ namespace MasterBlaster
         /// </summary>
         protected override void UnloadContent()
         {
-            
+
         }
 
         /// <summary>
@@ -135,15 +128,7 @@ namespace MasterBlaster
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            Resolution.BeginDraw();
-
-            GraphicsDevice.Clear(Color.Black);
-
-            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Resolution.getTransformationMatrix());
-
-            GameScreenService.ActiveGameScreen.Draw(_spriteBatch);
-
-            _spriteBatch.End();
+            base.Draw(gameTime);
         }
     }
 }
