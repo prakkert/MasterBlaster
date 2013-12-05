@@ -1,5 +1,6 @@
 ﻿using MasterBlaster.Components;
 using MasterBlaster.Engine;
+using MasterBlaster.Engine.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using System;
@@ -9,7 +10,7 @@ using System.Text;
 
 namespace MasterBlaster.Services
 {
-    public class SoundService : IServiceComponent
+    public class SoundService : IComponent
     {
         public Dictionary<string, SoundEffect> SoundEffects;
 

@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
 using System.Threading;
 using Microsoft.Xna.Framework.Audio;
+using MasterBlaster.Engine.Components;
 
 #endregion
 
@@ -83,17 +84,17 @@ namespace MasterBlaster.Engine
 
             _graphics.GraphicsDevice.Clear(Color.Black);
 
-            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Resolution.getTransformationMatrix());
+          //  _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Resolution.getTransformationMatrix());
 
-            List<IDrawableComponent> drawableComponents = Components.GetAllOfType<IDrawableComponent>();
+           // List<IDrawableComponent> drawableComponents = Components.GetAllOfType<IDrawableComponent>();
 
-            foreach (var drawableComponent in drawableComponents)
-            {
-                drawableComponent.Draw(_spriteBatch);
-            }
+           // foreach (var drawableComponent in drawableComponents)
+           // {
+           //     drawableComponent.Draw(_spriteBatch);
+           // }
 
             GameScreenService.ActiveGameScreen.Draw(_spriteBatch);
-            _spriteBatch.End();
+          //  _spriteBatch.End();
             base.Draw(gameTime);
         }
     }

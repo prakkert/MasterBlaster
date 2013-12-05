@@ -28,7 +28,7 @@ namespace MasterBlaster.GameScreens
         {
             Game.IsMouseVisible = false;
 
-            Components.Add<CollisionService>(new CollisionService(this));
+            Components.Add<CollisionService>(new CollisionService(this.Components));
             Components.Add<ScoreService>(new ScoreService());
             Components.Add<KeyboardService>(new KeyboardService());
             Components.Add<MovementService>(new MovementService());
@@ -94,9 +94,9 @@ namespace MasterBlaster.GameScreens
                 pause = !pause;
             }
             else if (keyboardService.IsKeyPressed(Keys.Escape))
-           {
-               Game.GameScreenService.Pop();
-           }
+            {
+                Game.GameScreenService.Pop();
+            }
 
             if (!pause && levelTime.TotalSeconds > 3)
             {
@@ -136,7 +136,7 @@ namespace MasterBlaster.GameScreens
 
                 if (fireball != null)
                 {
-                //    fireball.Update(gameTime);
+                    //    fireball.Update(gameTime);
 
                     if (fireball.Destroyed)
                     {
@@ -148,7 +148,7 @@ namespace MasterBlaster.GameScreens
 
                 foreach (Asteroid asteroid in asteroids)
                 {
-                //    asteroid.Update(gameTime);
+                    //    asteroid.Update(gameTime);
                 }
 
                 while (Components.GetAllOfType<Asteroid>().Count < 5)
@@ -165,13 +165,15 @@ namespace MasterBlaster.GameScreens
 
             levelTime += gameTime.ElapsedGameTime;
 
-         //   base.Update(gameTime);
+            //   base.Update(gameTime);
         }
 
-        
-    
+
+
         public override void Draw(SpriteBatch spriteBatch)
         {
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Resolution.getTransformationMatrix());
+
             base.Draw(spriteBatch);
 
             var collidableComponents = Components.GetAllOfType<ICollidableComponent>();
@@ -182,9 +184,9 @@ namespace MasterBlaster.GameScreens
                 {
                     DrawBorder(spriteBatch, Game.Textures["Star"], component.CollisionBoundaries, 1, Color.Red);
                 }
-                          
+
             }
-             
+
             foreach (Vector2 starPoint in starPoints)
             {
                 spriteBatch.Draw(Game.Textures["Star"], starPoint, Color.White);
@@ -193,10 +195,11 @@ namespace MasterBlaster.GameScreens
 
 
             spriteBatch.DrawString(defaultFont, "Points: " + Components.GetSingle<ScoreService>().Points, new Vector2(10, 10), Color.Red);
-          //  spriteBatch.DrawString(defaultFont, "Speed: " + Math.Round(GetComponentsOfType<Ship>().First().Speed, 1), new Vector2(10, 30), Color.Red);
+            //  spriteBatch.DrawString(defaultFont, "Speed: " + Math.Round(GetComponentsOfType<Ship>().First().Speed, 1), new Vector2(10, 30), Color.Red);
             spriteBatch.DrawString(defaultFont, "FPS: " + fps, new Vector2(10, 50), Color.Red);
-            spriteBatch.DrawString(defaultFont, "Memory: " + Math.Round((double)GC.GetTotalMemory(true) / 1024 / 1024,1) + " mB", new Vector2(10, 70), Color.Red);
+            spriteBatch.DrawString(defaultFont, "Memory: " + Math.Round((double)GC.GetTotalMemory(true) / 1024 / 1024, 1) + " mB", new Vector2(10, 70), Color.Red);
 
+            spriteBatch.End();
         }
     }
 }

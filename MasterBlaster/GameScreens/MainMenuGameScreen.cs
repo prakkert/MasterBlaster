@@ -119,12 +119,18 @@ namespace MasterBlaster.GameScreens
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Resolution.getTransformationMatrix());
+           
+            base.Draw(spriteBatch);
+
             spriteBatch.Draw(Game.Textures["MainMenuBackground"],new Rectangle(0,0,1920,1080), Color.Wheat);
             spriteBatch.Draw(Game.Textures["MainMenuTitle"], new Rectangle(0, 0, 1920, 1080), Color.Wheat);
             spriteBatch.Draw(Game.Textures["MainMenuNewGameButton"], new Rectangle(0, 0, 1920, 1080), Color.Wheat);
             spriteBatch.Draw(Game.Textures["MainMenuCreditsButton"], new Rectangle(0, 0, 1920, 1080), Color.Wheat);
             spriteBatch.Draw(Game.Textures["MainMenuExitButton"], new Rectangle(0, 0, 1920, 1080), Color.Wheat);
             spriteBatch.Draw(Game.Textures["Arrow"], ArrowPosition, Color.Wheat);
+
+            spriteBatch.End();
         }
 
         public enum SelectedMenuItem

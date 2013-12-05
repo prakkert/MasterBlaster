@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MasterBlaster.Engine
+namespace MasterBlaster.Engine.Components
 {
     public interface IComponent
     {

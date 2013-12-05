@@ -1,6 +1,7 @@
 ﻿
 using MasterBlaster.Components;
 using MasterBlaster.Engine;
+using MasterBlaster.Engine.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;

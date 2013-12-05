@@ -1,5 +1,6 @@
 ﻿using MasterBlaster.Components;
 using MasterBlaster.Engine;
+using MasterBlaster.Engine.Components;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,9 @@ namespace MasterBlaster.Services
     {
         private ComponentStore _components;
 
-        public CollisionService(IHasComponentStore game)
+        public CollisionService(ComponentStore components)
         {
-            _components = game.Components;
+            _components = components;
         }
 
         public void Update(GameTime gameTime)

@@ -51,11 +51,11 @@
     <Compile Include="BaseGameScreen.cs" />
     <Compile Include="ComponentStore.cs" />
     <Compile Include="GameScreenService.cs" />
-    <Compile Include="IComponent.cs" />
-    <Compile Include="IDrawableComponent.cs" />
+    <Compile Include="Components\IComponent.cs" />
+    <Compile Include="Components\IDrawableComponent.cs" />
     <Compile Include="IGameScreen.cs" />
     <Compile Include="IHasComponentStore.cs" />
-    <Compile Include="IUpdatableComponent.cs" />
+    <Compile Include="Components\IUpdatableComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BaseGame.cs" />
     <Compile Include="Resolution.cs" />

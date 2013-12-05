@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MasterBlaster.Engine
+namespace MasterBlaster.Engine.Components
 {
     public interface IDrawableComponent : IComponent
     {
