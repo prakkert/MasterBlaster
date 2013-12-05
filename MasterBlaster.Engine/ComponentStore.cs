@@ -51,5 +51,10 @@ namespace MasterBlaster.Engine
        {
            _components = new List<IComponent>();
        }
+
+       public List<IComponent> GetAll()
+       {
+           return _components;
+       }
     }
 }

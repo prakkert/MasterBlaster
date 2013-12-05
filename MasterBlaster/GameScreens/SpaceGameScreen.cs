@@ -1,5 +1,6 @@
 ﻿using MasterBlaster.Components;
 using MasterBlaster.Engine;
+using MasterBlaster.Engine.Components;
 using MasterBlaster.Entities;
 using MasterBlaster.Services;
 using Microsoft.Xna.Framework;
@@ -18,7 +19,6 @@ namespace MasterBlaster.GameScreens
 
         TimeSpan levelTime;
 
-        bool pause = false;
         int fps = 0;
 
         private List<Vector2> starPoints;
@@ -31,7 +31,7 @@ namespace MasterBlaster.GameScreens
             Components.Add<CollisionService>(new CollisionService(this.Components));
             Components.Add<ScoreService>(new ScoreService());
             Components.Add<KeyboardService>(new KeyboardService());
-            Components.Add<MovementService>(new MovementService());
+            Components.Add<MovementService>(new MovementService(Components));
 
             Reset();
         }
@@ -80,87 +80,74 @@ namespace MasterBlaster.GameScreens
         {
             base.Update(gameTime);
 
-            var movableComponents = Components.GetAllOfType<IMovableComponent>();
-
-            foreach (var component in movableComponents)
-            {
-                component.Move(gameTime);
-            }
-
             var keyboardService = Components.GetSingle<KeyboardService>();
 
-            if (keyboardService.IsKeyPressed(Keys.F12))
-            {
-                pause = !pause;
-            }
-            else if (keyboardService.IsKeyPressed(Keys.Escape))
+            if (keyboardService.IsKeyPressed(Keys.Escape))
             {
                 Game.GameScreenService.Pop();
             }
 
-            if (!pause && levelTime.TotalSeconds > 3)
+
+            Ship ship = Components.GetSingle<Ship>();
+
+            if (keyboardService.IsKeyUp(Keys.Left) && keyboardService.IsKeyDown(Keys.Right))
             {
+                ship.Right();
+            }
 
-                Ship ship = Components.GetSingle<Ship>();
+            else if (keyboardService.IsKeyDown(Keys.Left) && keyboardService.IsKeyUp(Keys.Right))
+            {
+                ship.Left();
+            }
 
-                if (keyboardService.IsKeyUp(Keys.Left) && keyboardService.IsKeyDown(Keys.Right))
+            if (keyboardService.IsKeyDown(Keys.Up) && keyboardService.IsKeyUp(Keys.Down))
+            {
+                ship.Accelerate();
+            }
+
+            else if (keyboardService.IsKeyUp(Keys.Up) && keyboardService.IsKeyDown(Keys.Down))
+            {
+                ship.Decelerate();
+            }
+
+            Fireball fireball = Components.GetAllOfType<Fireball>().FirstOrDefault();
+
+            if (keyboardService.IsKeyPressed(Keys.LeftControl) && fireball == null)
+            {
+                Components.Add(new Fireball(Game.Textures["Fireball"], ship.Position, ship.Direction, ship.Rotation));
+                fireball = Components.GetAllOfType<Fireball>().First();
+            }
+
+
+            ship.Update(gameTime);
+
+            if (fireball != null)
+            {
+                //    fireball.Update(gameTime);
+
+                if (fireball.Destroyed)
                 {
-                    ship.Right();
-                }
-
-                else if (keyboardService.IsKeyDown(Keys.Left) && keyboardService.IsKeyUp(Keys.Right))
-                {
-                    ship.Left();
-                }
-
-                if (keyboardService.IsKeyDown(Keys.Up) && keyboardService.IsKeyUp(Keys.Down))
-                {
-                    ship.Accelerate();
-                }
-
-                else if (keyboardService.IsKeyUp(Keys.Up) && keyboardService.IsKeyDown(Keys.Down))
-                {
-                    ship.Decelerate();
-                }
-
-                Fireball fireball = Components.GetAllOfType<Fireball>().FirstOrDefault();
-
-                if (keyboardService.IsKeyPressed(Keys.LeftControl) && fireball == null)
-                {
-                    Components.Add(new Fireball(Game.Textures["Fireball"], ship.Position, ship.Direction, ship.Rotation));
-                    fireball = Components.GetAllOfType<Fireball>().First();
-                }
-
-
-                ship.Update(gameTime);
-
-                if (fireball != null)
-                {
-                    //    fireball.Update(gameTime);
-
-                    if (fireball.Destroyed)
-                    {
-                        Components.Remove<Fireball>(fireball);
-                    }
-                }
-
-                var asteroids = Components.GetAllOfType<Asteroid>();
-
-                foreach (Asteroid asteroid in asteroids)
-                {
-                    //    asteroid.Update(gameTime);
-                }
-
-                while (Components.GetAllOfType<Asteroid>().Count < 5)
-                {
-                    Components.Add(new Asteroid(Game.Textures["Asteroid"]));
-                }
-
-                if (ship.Destroyed)
-                {
-                    Reset();
+                    Components.Remove<Fireball>(fireball);
                 }
             }
+
+            var asteroids = Components.GetAllOfType<Asteroid>();
+
+            foreach (Asteroid asteroid in asteroids)
+            {
+                //    asteroid.Update(gameTime);
+            }
+
+            while (Components.GetAllOfType<Asteroid>().Count < 5)
+            {
+                Components.Add(new Asteroid(Game.Textures["Asteroid"]));
+            }
+
+            if (ship.Destroyed)
+            {
+                Reset();
+            }
+
             fps = (int)(1000 / gameTime.ElapsedGameTime.TotalMilliseconds);
 
             levelTime += gameTime.ElapsedGameTime;
