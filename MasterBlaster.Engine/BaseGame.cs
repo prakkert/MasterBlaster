@@ -28,18 +28,12 @@ namespace MasterBlaster.Engine
 
         public new ComponentStore Components { get; private set; }
 
-        public Dictionary<string, Texture2D> Textures { get; private set; }
-        public Dictionary<string, SoundEffect> SoundEffects { get; private set; }
-
         public BaseGame()
             : base()
         {
             _graphics = new GraphicsDeviceManager(this);
             Components = new ComponentStore();
             GameScreenService = new GameScreenService();
-
-            Textures = new Dictionary<string, Texture2D>();
-            SoundEffects = new Dictionary<string, SoundEffect>();
 
             Resolution.Init(ref _graphics);
         }

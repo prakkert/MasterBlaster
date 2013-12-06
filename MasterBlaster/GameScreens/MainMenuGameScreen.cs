@@ -22,6 +22,8 @@ namespace MasterBlaster.GameScreens
         public MainMenuGameScreen(RunGame game) : base("MainMenu", game)
         {
             Components.Add<KeyboardService>(new KeyboardService());
+
+            LoadTextures();
         }
 
         public override void Activate()
@@ -123,12 +125,12 @@ namespace MasterBlaster.GameScreens
            
             base.Draw(spriteBatch);
 
-            spriteBatch.Draw(Game.Textures["MainMenuBackground"],new Rectangle(0,0,1920,1080), Color.Wheat);
-            spriteBatch.Draw(Game.Textures["MainMenuTitle"], new Rectangle(0, 0, 1920, 1080), Color.Wheat);
-            spriteBatch.Draw(Game.Textures["MainMenuNewGameButton"], new Rectangle(0, 0, 1920, 1080), Color.Wheat);
-            spriteBatch.Draw(Game.Textures["MainMenuCreditsButton"], new Rectangle(0, 0, 1920, 1080), Color.Wheat);
-            spriteBatch.Draw(Game.Textures["MainMenuExitButton"], new Rectangle(0, 0, 1920, 1080), Color.Wheat);
-            spriteBatch.Draw(Game.Textures["Arrow"], ArrowPosition, Color.Wheat);
+            spriteBatch.Draw(Textures["MainMenuBackground"],new Rectangle(0,0,1920,1080), Color.Wheat);
+            spriteBatch.Draw(Textures["MainMenuTitle"], new Rectangle(0, 0, 1920, 1080), Color.Wheat);
+            spriteBatch.Draw(Textures["MainMenuNewGameButton"], new Rectangle(0, 0, 1920, 1080), Color.Wheat);
+            spriteBatch.Draw(Textures["MainMenuCreditsButton"], new Rectangle(0, 0, 1920, 1080), Color.Wheat);
+            spriteBatch.Draw(Textures["MainMenuExitButton"], new Rectangle(0, 0, 1920, 1080), Color.Wheat);
+            spriteBatch.Draw(Textures["Arrow"], ArrowPosition, Color.Wheat);
 
             spriteBatch.End();
         }
@@ -138,6 +140,22 @@ namespace MasterBlaster.GameScreens
             NewGame, 
             Credits,
             Exit
+        }
+
+        public override void LoadTextures()
+        {
+            Textures.Add("MainMenuBackground", Game.Content.Load<Texture2D>("Background"));
+            Textures.Add("MainMenuTitle", Game.Content.Load<Texture2D>("Title"));
+            Textures.Add("MainMenuNewGameButton", Game.Content.Load<Texture2D>("NewGameButton"));
+            Textures.Add("MainMenuCreditsButton", Game.Content.Load<Texture2D>("CreditsButton"));
+            Textures.Add("MainMenuExitButton", Game.Content.Load<Texture2D>("ExitGameButton"));
+
+            Textures.Add("Arrow", Game.Content.Load<Texture2D>("Arrow"));
+        }
+
+        public override void LoadSoundEffects()
+        {
+    
         }
     }
 }

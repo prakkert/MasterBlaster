@@ -70,37 +70,7 @@ namespace MasterBlaster
         {
             Content.RootDirectory = "Content";
 
-            LoadTextures();
-            LoadSounds();
-
             GameScreenService.Push(new MainMenuGameScreen(this));
-        }
-
-        private void LoadSounds()
-        {
-            SoundEffects.Add("Explosion", Content.Load<SoundEffect>(@"Sounds\Explosion"));
-
-            Components.GetSingle<SoundService>().LoadContent(SoundEffects);
-        }
-
-        private void LoadTextures()
-        {
-            Textures.Add("Ship", Content.Load<Texture2D>("Ship"));
-            Textures.Add("Asteroid", Content.Load<Texture2D>("Asteroid"));
-            Textures.Add("Fireball", Content.Load<Texture2D>("Fireball"));
-
-            Textures.Add("MainMenuBackground", Content.Load<Texture2D>("Background"));
-            Textures.Add("MainMenuTitle", Content.Load<Texture2D>("Title"));
-            Textures.Add("MainMenuNewGameButton", Content.Load<Texture2D>("NewGameButton"));
-            Textures.Add("MainMenuCreditsButton", Content.Load<Texture2D>("CreditsButton"));
-            Textures.Add("MainMenuExitButton", Content.Load<Texture2D>("ExitGameButton"));
-
-            Textures.Add("Arrow", Content.Load<Texture2D>("Arrow"));
-
-            Texture2D star = new Texture2D(this.GraphicsDevice, 1, 1);
-            star.SetData(new Color[] { Color.White });
-
-            Textures.Add("Star", star);
         }
 
         /// <summary>

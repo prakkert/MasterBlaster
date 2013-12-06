@@ -10,7 +10,7 @@ using System.Text;
 
 namespace MasterBlaster.Entities
 {
-    public class Fireball : BaseComponent, ICollidableComponent, IDrawableComponent, IMovableComponent
+    public class Fireball : BaseComponent, IEntityComponent, ICollidableComponent, IDrawableComponent, IMovableComponent
     {
         public Texture2D Texture { get; set; }
         public Vector2 Position { get; set; }
@@ -37,12 +37,6 @@ namespace MasterBlaster.Entities
                 Destroy();
             }
         }
-
-        internal void Destroy()
-        {
-            Destroyed = true;
-        }
-
 
         public void CollidedWith(ICollidableComponent component)
         {
@@ -91,6 +85,11 @@ namespace MasterBlaster.Entities
 
                 CollisionBoundaries = new Rectangle((int)(Position.X - Texture.Width / 2), (int)(Position.Y - Texture.Height / 2), (int)(Texture.Width), (int)(Texture.Height));
             }
+        }
+
+        public override void Destroy()
+        {
+            Destroyed = true;
         }
     }
 }

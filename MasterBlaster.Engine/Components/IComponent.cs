@@ -9,7 +9,6 @@ namespace MasterBlaster.Engine.Components
 {
     public interface IComponent
     {
-       // Guid Id { get; }
-      //  bool Destroyed { get; set; }
+        // Guid Id { get; }
     }
 }

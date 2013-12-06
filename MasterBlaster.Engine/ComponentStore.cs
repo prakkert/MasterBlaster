@@ -40,6 +40,14 @@ namespace MasterBlaster.Engine
        {
            return (T)_components.Single(c => c is T);
        }
+
+       public T GetSingleOrDefault<T>() where T : IComponent
+       {
+           var component = _components.SingleOrDefault(c => c is T);
+
+           return component != null ? (T)component : default(T);
+       }
+
        public List<T> GetAllOfType<T>() where T : IComponent
        {
            var selectedComponents = _components.Where(c => c is T).ToList();

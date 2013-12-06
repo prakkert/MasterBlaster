@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MasterBlaster.Components
 {
-    public class BaseComponent : IComponent
+    public abstract class BaseComponent : IComponent
     {
         public Guid Id { get; private set; }
         public bool Destroyed { get; set; }
@@ -16,5 +16,7 @@ namespace MasterBlaster.Components
         {
             Id = Guid.NewGuid();
         }
+
+        public abstract void Destroy();
     }
 }

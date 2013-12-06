@@ -1,6 +1,7 @@
 ﻿using MasterBlaster.Engine;
 using MasterBlaster.Engine.Components;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,9 @@ namespace MasterBlaster.Engine
     {
         public string Name { get; protected set; }
         public BaseGame Game { get; private set; }
+        
+        public Dictionary<string, Texture2D> Textures { get; private set; }
+        public Dictionary<string, SoundEffect> SoundEffects { get; private set; }
 
         public ComponentStore Components { get; private set; }
 
@@ -29,11 +33,17 @@ namespace MasterBlaster.Engine
             {
                 Components = new ComponentStore(components);
             }
+
+            Textures = new Dictionary<string, Texture2D>();
+            SoundEffects = new Dictionary<string, SoundEffect>();
         }
 
         public abstract void Activate();
 
         public abstract void Deactivate();
+
+        public abstract void LoadTextures();
+        public abstract void LoadSoundEffects();
 
         public virtual void Update(GameTime gameTime)
         {

@@ -4,6 +4,7 @@ using MasterBlaster.Engine.Components;
 using MasterBlaster.Entities;
 using MasterBlaster.Services;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -28,10 +29,16 @@ namespace MasterBlaster.GameScreens
         {
             Game.IsMouseVisible = false;
 
-            Components.Add<CollisionService>(new CollisionService(this.Components));
+            Components.Add<CollisionService>(new CollisionService(Components));
             Components.Add<ScoreService>(new ScoreService());
+            Components.Add<SoundService>(new SoundService());
             Components.Add<KeyboardService>(new KeyboardService());
             Components.Add<MovementService>(new MovementService(Components));
+            Components.Add<AsteroidService>(new AsteroidService(Components));
+            Components.Add<ShipService>(new ShipService(Components, this));
+
+            LoadTextures();
+            LoadSoundEffects();
 
             Reset();
         }
@@ -44,11 +51,11 @@ namespace MasterBlaster.GameScreens
             Components.RemoveAll<Asteroid>();
             Components.RemoveAll<Fireball>();
 
-            Components.Add(new Ship(Game.Textures["Ship"], new Vector2((int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2), (int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2))));
+            Components.Add(new Ship(Textures["Ship"], new Vector2((int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2), (int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2))));
 
             for (int i = 0; i < 5; i++)
             {
-                Components.Add(new Asteroid(Game.Textures["Asteroid"]));
+                Components.Add(new Asteroid(Textures["Asteroid"], Asteroid.AsteroidSize.Large, Vector2.Zero));
             }
 
             defaultFont = Game.Content.Load<SpriteFont>("DefaultFont");
@@ -75,6 +82,23 @@ namespace MasterBlaster.GameScreens
         {
 
         }
+        public override void LoadSoundEffects()
+        {
+            SoundEffects.Add("Explosion", Game.Content.Load<SoundEffect>(@"Sounds\Explosion"));
+
+            Components.GetSingle<SoundService>().LoadContent(SoundEffects);
+        }
+        public override void LoadTextures()
+        {
+            Textures.Add("Ship", Game.Content.Load<Texture2D>("Ship"));
+            Textures.Add("Asteroid", Game.Content.Load<Texture2D>("Asteroid"));
+            Textures.Add("Fireball", Game.Content.Load<Texture2D>("Fireball"));
+
+            Texture2D star = new Texture2D(Game.GraphicsDevice, 1, 1);
+            star.SetData(new Color[] { Color.White });
+
+            Textures.Add("Star", star);
+        }
 
         public override void Update(GameTime gameTime)
         {
@@ -87,61 +111,7 @@ namespace MasterBlaster.GameScreens
                 Game.GameScreenService.Pop();
             }
 
-
             Ship ship = Components.GetSingle<Ship>();
-
-            if (keyboardService.IsKeyUp(Keys.Left) && keyboardService.IsKeyDown(Keys.Right))
-            {
-                ship.Right();
-            }
-
-            else if (keyboardService.IsKeyDown(Keys.Left) && keyboardService.IsKeyUp(Keys.Right))
-            {
-                ship.Left();
-            }
-
-            if (keyboardService.IsKeyDown(Keys.Up) && keyboardService.IsKeyUp(Keys.Down))
-            {
-                ship.Accelerate();
-            }
-
-            else if (keyboardService.IsKeyUp(Keys.Up) && keyboardService.IsKeyDown(Keys.Down))
-            {
-                ship.Decelerate();
-            }
-
-            Fireball fireball = Components.GetAllOfType<Fireball>().FirstOrDefault();
-
-            if (keyboardService.IsKeyPressed(Keys.LeftControl) && fireball == null)
-            {
-                Components.Add(new Fireball(Game.Textures["Fireball"], ship.Position, ship.Direction, ship.Rotation));
-                fireball = Components.GetAllOfType<Fireball>().First();
-            }
-
-
-            ship.Update(gameTime);
-
-            if (fireball != null)
-            {
-                //    fireball.Update(gameTime);
-
-                if (fireball.Destroyed)
-                {
-                    Components.Remove<Fireball>(fireball);
-                }
-            }
-
-            var asteroids = Components.GetAllOfType<Asteroid>();
-
-            foreach (Asteroid asteroid in asteroids)
-            {
-                //    asteroid.Update(gameTime);
-            }
-
-            while (Components.GetAllOfType<Asteroid>().Count < 5)
-            {
-                Components.Add(new Asteroid(Game.Textures["Asteroid"]));
-            }
 
             if (ship.Destroyed)
             {
@@ -169,14 +139,14 @@ namespace MasterBlaster.GameScreens
             {
                 if (component is ICollidableComponent)
                 {
-                    DrawBorder(spriteBatch, Game.Textures["Star"], component.CollisionBoundaries, 1, Color.Red);
+                    DrawBorder(spriteBatch, Textures["Star"], component.CollisionBoundaries, 1, Color.Red);
                 }
 
             }
 
             foreach (Vector2 starPoint in starPoints)
             {
-                spriteBatch.Draw(Game.Textures["Star"], starPoint, Color.White);
+                spriteBatch.Draw(Textures["Star"], starPoint, Color.White);
             }
 
 

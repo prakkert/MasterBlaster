@@ -12,7 +12,7 @@ using System.Text;
 
 namespace MasterBlaster.Entities
 {
-    public class Asteroid : BaseComponent, ICollidableComponent, IDrawableComponent, IMovableComponent
+    public class Asteroid : BaseComponent, IEntityComponent, ICollidableComponent, IDrawableComponent, IMovableComponent
     {
         public Texture2D Texture { get; set; }
         public Vector2 Position { get; set; }
@@ -25,18 +25,44 @@ namespace MasterBlaster.Entities
 
         public Rectangle CollisionBoundaries { get; set; }
 
-        public Asteroid(Texture2D texture)
+        public Asteroid(Texture2D texture, AsteroidSize size, Vector2 position)
         {
             Texture = texture;
             Rotation = 0;
-            Direction = new Vector2((float)Math.Cos(RandomGenerator.Get.Next(100, 100) / 0.01f), (float)Math.Sin(RandomGenerator.Get.Next(-100, 100) / 0.01f));
+            Direction = new Vector2((float)Math.Cos(RandomGenerator.Get.Next(-100, 100) / 0.01f), (float)Math.Sin(RandomGenerator.Get.Next(-100, 100) / 0.01f));
 
-            Position = new Vector2(RandomGenerator.Get.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width), RandomGenerator.Get.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height));
+            if (position == Vector2.Zero)
+            {
+                Position = new Vector2(RandomGenerator.Get.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width), RandomGenerator.Get.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height));
+            }
+            else
+            {
+                Position = position;
+            }
 
-            Speed = RandomGenerator.Get.Next(10, 1000) * 0.01f;
-            RotationSpeed = RandomGenerator.Get.Next(-100, 100) * 0.002f;
+      
 
-            Size = RandomGenerator.Get.Next(10, 25) / 10;
+            switch (size)
+            {
+                case AsteroidSize.Small:
+                    {
+                        Size = 1;
+                        break;
+                    }
+                case AsteroidSize.Medium:
+                    {
+                        Size = 3;
+                        break;
+                    }
+                case AsteroidSize.Large:
+                    {
+                        Size = 5;
+                        break;
+                    }
+            }
+
+            Speed = (RandomGenerator.Get.Next(10, 1000) * 0.01f) / Size;
+            RotationSpeed = RandomGenerator.Get.Next(-100, 100) * 0.002f / Size;
         }
 
         public void CollidedWith(ICollidableComponent component)
@@ -50,7 +76,7 @@ namespace MasterBlaster.Entities
 
             else if (component is Asteroid)
             {
-              
+
             }
 
             else if (component is Ship)
@@ -93,6 +119,18 @@ namespace MasterBlaster.Entities
 
                 CollisionBoundaries = new Rectangle((int)(Position.X - Texture.Width * Size / 2), (int)(Position.Y - Texture.Height * Size / 2), (int)(Texture.Width * Size), (int)(Texture.Height * Size));
             }
+        }
+
+        public override void Destroy()
+        {
+            Destroyed = true;
+        }
+
+        public enum AsteroidSize
+        {
+            Small, 
+            Medium, 
+            Large
         }
     }
 }

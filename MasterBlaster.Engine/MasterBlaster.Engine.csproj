@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="BaseGameScreen.cs" />
     <Compile Include="ComponentStore.cs" />
+    <Compile Include="Components\IEntityComponent.cs" />
     <Compile Include="GameScreenService.cs" />
     <Compile Include="Components\IComponent.cs" />
     <Compile Include="Components\IDrawableComponent.cs" />
@@ -65,6 +66,9 @@
       <Project>{7de47032-a904-4c29-bd22-2d235e8d91ba}</Project>
       <Name>MonoGame.Framework.WindowsGL</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

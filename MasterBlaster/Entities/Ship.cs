@@ -11,7 +11,7 @@ using System.Text;
 
 namespace MasterBlaster.Entities
 {
-    public class Ship : BaseComponent, ICollidableComponent, IDrawableComponent, IMovableComponent
+    public class Ship : BaseComponent, IEntityComponent, ICollidableComponent, IDrawableComponent, IMovableComponent
     {
         public Texture2D Texture { get; set; }
         public Vector2 Position { get; set; }
@@ -19,6 +19,8 @@ namespace MasterBlaster.Entities
         public float Speed { get; set; }
         public float MaxSpeed { get; set; }
         public float Rotation { get; set; }
+
+        public bool Destroyed { get; set; }
 
         public Rectangle CollisionBoundaries { get; set; }
 
@@ -33,45 +35,6 @@ namespace MasterBlaster.Entities
 
             CollisionBoundaries = new Rectangle((int)(Position.X - Texture.Width / 2), (int)(Position.Y - Texture.Height / 2), Texture.Width, Texture.Height);
         }
-
-        public void Accelerate()
-        {
-            if (Speed < MaxSpeed)
-            {
-                Speed += 0.1f;
-            }
-            if (Speed > MaxSpeed)
-            {
-                Speed = MaxSpeed;
-            }
-        }
-        public void Decelerate()
-        {
-            if (Speed > 0)
-            {
-                Speed -= 0.1f;
-            }
-            if (Speed < 0)
-            {
-                Speed = 0;
-            }
-        }
-
-        public void Left()
-        {
-            Rotation -= 0.1f;
-        }
-
-        public void Right()
-        {
-            Rotation += 0.1f;
-        }
-
-        public void Update(GameTime gameTime)
-        {
-
-        }
-
 
         public void CollidedWith(ICollidableComponent component)
         {
@@ -110,6 +73,11 @@ namespace MasterBlaster.Entities
                 Position = new Vector2(Position.X, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
             }
             CollisionBoundaries = new Rectangle((int)(Position.X - Texture.Width / 2), (int)(Position.Y - Texture.Height / 2), Texture.Width, Texture.Height);
+        }
+
+        public override void Destroy()
+        {
+            Destroyed = true;
         }
     }
 }
