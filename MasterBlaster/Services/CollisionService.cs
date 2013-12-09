@@ -1,6 +1,7 @@
 ﻿using MasterBlaster.Components;
 using MasterBlaster.Engine;
 using MasterBlaster.Engine.Components;
+using MasterBlaster.Entities;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,12 @@ namespace MasterBlaster.Services
                     {
                         collidableComponents[i].CollidedWith(collidableComponents[j]);
                         collidableComponents[j].CollidedWith(collidableComponents[i]);
+
+                        if (collidableComponents[i] is Asteroid && collidableComponents[j] is Asteroid)
+                        {
+                            var a1 = collidableComponents[i] as Asteroid;
+                            var a2 = collidableComponents[j] as Asteroid;
+                        }
                     }
                 }
             }

@@ -21,9 +21,13 @@ namespace MasterBlaster.Entities
         public float Rotation { get; set; }
         public float RotationSpeed { get; set; }
 
+        public Vector2 Center { get { return new Vector2(Position.X + (int)(Texture.Bounds.Center.X * Size), Position.Y + (int)(Texture.Bounds.Center.Y * Size)); } }
+
         public float Size { get; set; }
 
         public Rectangle CollisionBoundaries { get; set; }
+
+        public double Mass { get; set; }
 
         public Asteroid(Texture2D texture, AsteroidSize size, Vector2 position)
         {
@@ -63,6 +67,13 @@ namespace MasterBlaster.Entities
 
             Speed = (RandomGenerator.Get.Next(10, 1000) * 0.01f) / Size;
             RotationSpeed = RandomGenerator.Get.Next(-100, 100) * 0.002f / Size;
+
+            CalculateMass();
+        }
+
+        public void CalculateMass()
+        {
+            Mass = (4 / 3) * Math.PI * Math.Pow(Size / 2, 3);
         }
 
         public void CollidedWith(ICollidableComponent component)
@@ -76,7 +87,7 @@ namespace MasterBlaster.Entities
 
             else if (component is Asteroid)
             {
-
+              
             }
 
             else if (component is Ship)
@@ -95,6 +106,7 @@ namespace MasterBlaster.Entities
         {
             if (!Destroyed)
             {
+   
                 Position += Direction * (int)(Speed * (gameTime.ElapsedGameTime.TotalMilliseconds / 10));
 
                 Rotation += RotationSpeed;

@@ -30,7 +30,6 @@ namespace MasterBlaster
         public RunGame()
             : base()
         {
-            Resolution.Init(ref _graphics);
         }
 
         /// <summary>
@@ -41,18 +40,12 @@ namespace MasterBlaster
         /// </summary>
         protected override void Initialize()
         {
-            _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            _graphics.SynchronizeWithVerticalRetrace = true;
-            _graphics.IsFullScreen = true;
-            _graphics.ApplyChanges();
+           // 
+           // _graphics.ApplyChanges();
 
             IsFixedTimeStep = true;
 
             AddGameServices();
-
-            Resolution.SetVirtualResolution(1920, 1080);
-            Resolution.SetResolution(1920, 1080, false);
 
             base.Initialize();
         }

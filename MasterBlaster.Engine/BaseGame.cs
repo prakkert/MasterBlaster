@@ -32,10 +32,13 @@ namespace MasterBlaster.Engine
             : base()
         {
             _graphics = new GraphicsDeviceManager(this);
+            _graphics.IsFullScreen = true;
+            Resolution.Init(ref _graphics);
+
             Components = new ComponentStore();
             GameScreenService = new GameScreenService();
 
-            Resolution.Init(ref _graphics);
+        
         }
 
         /// <summary>
@@ -46,8 +49,13 @@ namespace MasterBlaster.Engine
         /// </summary>
         protected override void Initialize()
         {
-            _spriteBatch = new SpriteBatch(_graphics.GraphicsDevice);
             base.Initialize();
+
+            Resolution.SetVirtualResolution(1920, 1080);
+            Resolution.SetResolution(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height, false);
+         
+            _spriteBatch = new SpriteBatch(_graphics.GraphicsDevice);
+     
         }
 
 
@@ -76,19 +84,8 @@ namespace MasterBlaster.Engine
         {
             Resolution.BeginDraw();
 
-            _graphics.GraphicsDevice.Clear(Color.Black);
-
-          //  _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Resolution.getTransformationMatrix());
-
-           // List<IDrawableComponent> drawableComponents = Components.GetAllOfType<IDrawableComponent>();
-
-           // foreach (var drawableComponent in drawableComponents)
-           // {
-           //     drawableComponent.Draw(_spriteBatch);
-           // }
-
             GameScreenService.ActiveGameScreen.Draw(_spriteBatch);
-          //  _spriteBatch.End();
+
             base.Draw(gameTime);
         }
     }

@@ -23,6 +23,8 @@ namespace MasterBlaster.GameScreens
         {
             Components.Add<KeyboardService>(new KeyboardService());
 
+            Components.GetSingle<KeyboardService>().RegisterKeyListener(new KeyboardService.KeyCombination(Keys.Escape, KeyboardService.KeyEventType.Pressed), Exit);
+
             LoadTextures();
         }
 
@@ -111,12 +113,12 @@ namespace MasterBlaster.GameScreens
                             break;
                         }
                 }
+            }
+        }
 
-            }
-            if (Components.GetSingle<KeyboardService>().IsKeyPressed(Keys.Escape))
-            {
-                Game.Exit();
-            }
+        public void Exit()
+        {
+            Game.Exit();
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -125,11 +127,11 @@ namespace MasterBlaster.GameScreens
            
             base.Draw(spriteBatch);
 
-            spriteBatch.Draw(Textures["MainMenuBackground"],new Rectangle(0,0,1920,1080), Color.Wheat);
-            spriteBatch.Draw(Textures["MainMenuTitle"], new Rectangle(0, 0, 1920, 1080), Color.Wheat);
-            spriteBatch.Draw(Textures["MainMenuNewGameButton"], new Rectangle(0, 0, 1920, 1080), Color.Wheat);
-            spriteBatch.Draw(Textures["MainMenuCreditsButton"], new Rectangle(0, 0, 1920, 1080), Color.Wheat);
-            spriteBatch.Draw(Textures["MainMenuExitButton"], new Rectangle(0, 0, 1920, 1080), Color.Wheat);
+            spriteBatch.Draw(Textures["MainMenuBackground"],new Vector2(0,0), Color.Wheat);
+            spriteBatch.Draw(Textures["MainMenuTitle"], new Vector2(0, 0), Color.Wheat);
+            spriteBatch.Draw(Textures["MainMenuNewGameButton"], new Vector2(0, 0), Color.Wheat);
+            spriteBatch.Draw(Textures["MainMenuCreditsButton"], new Vector2(0,0), Color.Wheat);
+            spriteBatch.Draw(Textures["MainMenuExitButton"], new Vector2(0, 0), Color.Wheat);
             spriteBatch.Draw(Textures["Arrow"], ArrowPosition, Color.Wheat);
 
             spriteBatch.End();

@@ -5,6 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+//////////////////////////////////////////////////////////////////////////
+////License:  The MIT License (MIT)
+////Copyright (c) 2010 David Amador (http://www.david-amador.com)
+////
+////Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+////
+////The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+////
+////THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//////////////////////////////////////////////////////////////////////////
 namespace MasterBlaster.Engine
 {
     public static class Resolution
@@ -18,6 +28,11 @@ namespace MasterBlaster.Engine
         static private Matrix _ScaleMatrix;
         static private bool _FullScreen = false;
         static private bool _dirtyMatrix = true;
+
+        private static float zoom = 1.0f;
+
+        public static int ViewportWidth { get { return _VWidth; } }
+        public static int ViewportHeight { get { return _VHeight; } }
 
         static public void Init(ref GraphicsDeviceManager device)
         {
@@ -167,8 +182,8 @@ namespace MasterBlaster.Engine
 
             viewport.X = (_Device.PreferredBackBufferWidth / 2) - (width / 2);
             viewport.Y = (_Device.PreferredBackBufferHeight / 2) - (height / 2);
-            viewport.Width = width;
-            viewport.Height = height;
+            viewport.Width = (int)(width * zoom);
+            viewport.Height = (int)(height * zoom);
             viewport.MinDepth = 0;
             viewport.MaxDepth = 1;
 
@@ -179,6 +194,5 @@ namespace MasterBlaster.Engine
 
             _Device.GraphicsDevice.Viewport = viewport;
         }
-
     }
 }

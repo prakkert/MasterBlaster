@@ -37,6 +37,10 @@ namespace MasterBlaster.GameScreens
             Components.Add<AsteroidService>(new AsteroidService(Components));
             Components.Add<ShipService>(new ShipService(Components, this));
 
+            var keyboardService = Components.GetSingle<KeyboardService>();
+
+            keyboardService.RegisterKeyListener(new KeyboardService.KeyCombination(Keys.Escape, KeyboardService.KeyEventType.Pressed), ToMainMenu);
+
             LoadTextures();
             LoadSoundEffects();
 
@@ -51,7 +55,7 @@ namespace MasterBlaster.GameScreens
             Components.RemoveAll<Asteroid>();
             Components.RemoveAll<Fireball>();
 
-            Components.Add(new Ship(Textures["Ship"], new Vector2((int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2), (int)(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2))));
+            Components.Add(new Ship(Textures["Ship"], new Vector2((int)(Resolution.ViewportWidth / 2), (int)(Resolution.ViewportHeight / 2))));
 
             for (int i = 0; i < 5; i++)
             {
@@ -65,7 +69,7 @@ namespace MasterBlaster.GameScreens
 
             for (int i = 0; i < 1000; i++)
             {
-                starPoints.Add(new Vector2(RandomGenerator.Get.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width - 1), RandomGenerator.Get.Next(0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 1)));
+                starPoints.Add(new Vector2(RandomGenerator.Get.Next(0, Resolution.ViewportWidth - 1), RandomGenerator.Get.Next(0, Resolution.ViewportHeight - 1)));
             }
 
             levelTime = new TimeSpan();
@@ -104,13 +108,6 @@ namespace MasterBlaster.GameScreens
         {
             base.Update(gameTime);
 
-            var keyboardService = Components.GetSingle<KeyboardService>();
-
-            if (keyboardService.IsKeyPressed(Keys.Escape))
-            {
-                Game.GameScreenService.Pop();
-            }
-
             Ship ship = Components.GetSingle<Ship>();
 
             if (ship.Destroyed)
@@ -125,7 +122,10 @@ namespace MasterBlaster.GameScreens
             //   base.Update(gameTime);
         }
 
-
+        public void ToMainMenu()
+        {
+            Game.GameScreenService.Pop();
+        }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
