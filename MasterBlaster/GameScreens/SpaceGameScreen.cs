@@ -139,7 +139,7 @@ namespace MasterBlaster.GameScreens
             {
                 if (component is ICollidableComponent)
                 {
-                    DrawBorder(spriteBatch, Textures["Star"], component.CollisionBoundaries, 1, Color.Red);
+               //     DrawBorder(spriteBatch, Textures["Star"], component.CollisionBoundaries, 1, Color.Red);
                 }
 
             }

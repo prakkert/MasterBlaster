@@ -21,6 +21,16 @@ namespace MasterBlaster.Entities
         public float Rotation { get; set; }
         public float RotationSpeed { get; set; }
 
+        public bool Bounced { get; set; }
+
+        public Vector2 Velocity
+        {
+            get
+            {
+                return Direction * Speed;
+            }
+        }
+
         public Vector2 Center { get { return new Vector2(Position.X + (int)(Texture.Bounds.Center.X * Size), Position.Y + (int)(Texture.Bounds.Center.Y * Size)); } }
 
         public float Size { get; set; }
@@ -33,7 +43,7 @@ namespace MasterBlaster.Entities
         {
             Texture = texture;
             Rotation = 0;
-            Direction = new Vector2((float)Math.Cos(RandomGenerator.Get.Next(-100, 100) / 0.01f), (float)Math.Sin(RandomGenerator.Get.Next(-100, 100) / 0.01f));
+            Direction = new Vector2((float)Math.Cos(RandomGenerator.Get.Next(-100, 100)), (float)Math.Sin(RandomGenerator.Get.Next(-100, 100)));
 
             if (position == Vector2.Zero)
             {
@@ -43,6 +53,7 @@ namespace MasterBlaster.Entities
             {
                 Position = position;
             }
+            Direction.Normalize();
 
       
 
@@ -99,6 +110,28 @@ namespace MasterBlaster.Entities
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Texture, Position, null, Color.White, Rotation, new Vector2(25, 25), Size, SpriteEffects.None, 0f);
+
+            if (Position.X + (Size * Texture.Width) >= GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width)
+            {
+                var position2 = new Vector2(Position.X - GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, Position.Y);
+                spriteBatch.Draw(Texture, position2, null, Color.White, Rotation, new Vector2(25, 25), Size, SpriteEffects.None, 0f);
+            }
+            else if (Position.X - (Size * Texture.Width) <= 0)
+            {
+                var position2 =new Vector2(Position.X + GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, Position.Y);
+                spriteBatch.Draw(Texture, position2, null, Color.White, Rotation, new Vector2(25, 25), Size, SpriteEffects.None, 0f);
+            }
+            if (Position.Y + (Size * Texture.Height) >= GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height)
+            {
+                var position2 = new Vector2(Position.X, Position.Y - GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
+                spriteBatch.Draw(Texture, position2, null, Color.White, Rotation, new Vector2(25, 25), Size, SpriteEffects.None, 0f);
+            }
+            else if (Position.Y - (Size * Texture.Height) <= 0)
+            {
+                var position2 = new Vector2(Position.X, Position.Y + GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
+                spriteBatch.Draw(Texture, position2, null, Color.White, Rotation, new Vector2(25, 25), Size, SpriteEffects.None, 0f);
+            }
+
         }
 
 
@@ -107,7 +140,7 @@ namespace MasterBlaster.Entities
             if (!Destroyed)
             {
    
-                Position += Direction * (int)(Speed * (gameTime.ElapsedGameTime.TotalMilliseconds / 10));
+                Position += Velocity * (float)(gameTime.ElapsedGameTime.TotalMilliseconds / 10);
 
                 Rotation += RotationSpeed;
 

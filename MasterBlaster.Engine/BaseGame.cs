@@ -52,7 +52,7 @@ namespace MasterBlaster.Engine
             base.Initialize();
 
             Resolution.SetVirtualResolution(1920, 1080);
-            Resolution.SetResolution(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height, false);
+            Resolution.SetResolution(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height, true);
          
             _spriteBatch = new SpriteBatch(_graphics.GraphicsDevice);
      
